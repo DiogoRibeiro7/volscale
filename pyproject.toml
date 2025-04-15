@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "volnorm"
+version = "0.1.0"
+description = "Volatility-normalized feature engineering toolkit for financial time series"
+authors = ["Your Name <you@example.com>"]
+packages = [{ include = "volnorm" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^1.5.0"
+numpy = "^1.21.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
