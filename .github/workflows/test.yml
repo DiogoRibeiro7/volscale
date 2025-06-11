@@ -31,13 +31,13 @@ jobs:
         run: poetry install --no-root
 
       - name: Run ruff linter
-        run: poetry run ruff volnorm tests
+        run: poetry run ruff check .
 
       - name: Check formatting
-        run: poetry run black --check volnorm tests
+        run: poetry run black --check .
 
       - name: Type check
-        run: poetry run mypy volnorm
+        run: poetry run mypy .
 
       - name: Run tests
         run: |

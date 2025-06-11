@@ -27,9 +27,9 @@ The CI also checks formatting, static types and linting. You can run them
 manually using:
 
 ```bash
-poetry run ruff volnorm tests
-poetry run black --check volnorm tests
-poetry run mypy volnorm
+poetry run ruff check .
+poetry run black --check .
+poetry run mypy .
 ```
 
 ## Usage example
