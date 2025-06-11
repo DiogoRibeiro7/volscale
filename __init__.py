@@ -23,4 +23,3 @@ __all__ = [
     "normalize_feature",
     "build_normalized_features",
 ]
-

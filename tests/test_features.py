@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from volnorm.features import build_normalized_features
 
+
 def test_build_normalized_features():
     np.random.seed(0)
     prices = pd.Series(np.cumprod(1 + np.random.normal(0, 0.01, 60)))

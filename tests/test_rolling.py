@@ -10,6 +10,7 @@ from volnorm.rolling import (
     compute_zscore,
 )
 
+
 def test_rolling_std():
     s = pd.Series([1, 2, 3, 4, 5])
     result = compute_rolling_std(s, window=3)
@@ -22,11 +23,13 @@ def test_rolling_std_constant():
     expected = pd.Series([None, 0.0, 0.0, 0.0])
     pd.testing.assert_series_equal(result, expected, check_names=False)
 
+
 def test_sma():
     s = pd.Series([1, 2, 3, 4, 5])
     result = compute_sma(s, window=3)
     assert result.iloc[2] == 2.0
     assert result.iloc[4] == 4.0
+
 
 def test_atr_proxy():
     s = pd.Series([1, 4, 3, 2, 5])
@@ -68,7 +71,9 @@ def test_rolling_max_min_constant():
 def test_zscore():
     s = pd.Series([1, 2, 3, 4, 5])
     result = compute_zscore(s, window=3)
-    expected = (s - s.rolling(window=3, min_periods=3).mean()) / s.rolling(window=3, min_periods=3).std()
+    expected = (s - s.rolling(window=3, min_periods=3).mean()) / s.rolling(
+        window=3, min_periods=3
+    ).std()
     pd.testing.assert_series_equal(result, expected)
 
 
