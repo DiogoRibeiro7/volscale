@@ -1,6 +1,7 @@
 import pandas as pd
 from volnorm.normalize import normalize_feature
 
+
 def test_normalize_feature():
     f = pd.Series([10, 20, 30])
     v = pd.Series([2, 4, 5])

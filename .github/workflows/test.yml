@@ -22,20 +22,23 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy pytest ruff mypy black
-          pip install .
+          pip install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-root
 
       - name: Run ruff linter
-        run: ruff volnorm tests
+        run: poetry run ruff check .
 
       - name: Check formatting
-        run: black --check volnorm tests
+        run: poetry run black --check .
 
       - name: Type check
-        run: mypy volnorm
+        run: poetry run mypy .
 
       - name: Run tests
-        run: pytest tests
+        run: |
+          PYTHONPATH="$(pwd)/.." poetry run pytest tests
