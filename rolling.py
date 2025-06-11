@@ -7,14 +7,17 @@ def compute_ema(prices: pd.Series, span: int) -> pd.Series:
 
 
 def compute_rolling_std(values: pd.Series, window: int) -> pd.Series:
+    """Rolling standard deviation with full window requirement."""
     return values.rolling(window=window, min_periods=window).std()
 
 
 def compute_sma(prices: pd.Series, window: int) -> pd.Series:
+    """Simple moving average."""
     return prices.rolling(window=window, min_periods=window).mean()
 
 
 def compute_atr_proxy(prices: pd.Series, window: int) -> pd.Series:
+    """Approximate ATR using the rolling high-low range."""
     high = prices.rolling(window=window, min_periods=window).max()
     low = prices.rolling(window=window, min_periods=window).min()
     return high - low
