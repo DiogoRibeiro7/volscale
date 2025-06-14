@@ -65,3 +65,19 @@ def compute_bollinger_bands(
     upper = sma + num_std * std
     lower = sma - num_std * std
     return pd.DataFrame({"middle": sma, "upper": upper, "lower": lower})
+
+
+def compute_keltner_channels(
+    high: pd.Series,
+    low: pd.Series,
+    close: pd.Series,
+    window: int,
+    *,
+    atr_multiplier: float = 2.0,
+) -> pd.DataFrame:
+    """Return Keltner Channels using EMA and ATR."""
+    ema = close.ewm(span=window, adjust=False).mean()
+    atr = compute_atr(high, low, close, window)
+    upper = ema + atr_multiplier * atr
+    lower = ema - atr_multiplier * atr
+    return pd.DataFrame({"middle": ema, "upper": upper, "lower": lower})

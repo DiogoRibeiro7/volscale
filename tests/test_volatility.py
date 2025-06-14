@@ -5,6 +5,7 @@ from volnorm.volatility import (
     compute_mad,
     classify_volatility,
     compute_bollinger_bands,
+    compute_keltner_channels,
 )
 
 
@@ -44,3 +45,12 @@ def test_bollinger_bands():
     bands = compute_bollinger_bands(s, window=3, num_std=1)
     assert bands.columns.tolist() == ["middle", "upper", "lower"]
     assert bands["upper"].iloc[2] > bands["middle"].iloc[2]
+
+
+def test_keltner_channels():
+    high = pd.Series([10, 11, 12, 13])
+    low = pd.Series([9, 9.5, 10, 11])
+    close = pd.Series([9.5, 10, 11, 12])
+    channels = compute_keltner_channels(high, low, close, window=2, atr_multiplier=1)
+    assert channels.columns.tolist() == ["middle", "upper", "lower"]
+    assert channels["upper"].iloc[3] > channels["middle"].iloc[3]

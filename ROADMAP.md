@@ -25,6 +25,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 - [x] Volatility regime classification
 - [x] Denoising and smoothing (e.g., low-pass filters)
 - [x] Bollinger Bands indicator
+- [x] Keltner Channels indicator
 
 ---
 

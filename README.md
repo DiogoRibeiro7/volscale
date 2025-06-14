@@ -52,6 +52,7 @@ from volnorm import build_normalized_features
 # also available:
 #   compute_true_range, compute_atr, compute_mad,
 #   classify_volatility, compute_bollinger_bands,
+#   compute_keltner_channels,
 #   low_pass_filter, generate_synthetic_prices
 
 prices = pd.Series([100, 101, 102, 103, 104])
@@ -74,6 +75,15 @@ Calculate basic Bollinger Bands around a rolling mean:
 ```python
 from volnorm.volatility import compute_bollinger_bands
 bands = compute_bollinger_bands(prices, window=20)
+```
+
+## Keltner Channels
+
+ATR-based volatility bands using an EMA centerline:
+
+```python
+from volnorm.volatility import compute_keltner_channels
+channels = compute_keltner_channels(high, low, close, window=20, atr_multiplier=2)
 ```
 
 ## Synthetic data
