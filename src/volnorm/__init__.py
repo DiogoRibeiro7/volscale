@@ -10,6 +10,12 @@ from .rolling import (
 )
 from .normalize import normalize_feature
 from .features import build_normalized_features
+from .volatility import (
+    compute_true_range,
+    compute_atr,
+    compute_mad,
+    classify_volatility,
+)
 
 __all__ = [
     "compute_log_returns",
@@ -22,4 +28,8 @@ __all__ = [
     "compute_zscore",
     "normalize_feature",
     "build_normalized_features",
+    "compute_true_range",
+    "compute_atr",
+    "compute_mad",
+    "classify_volatility",
 ]

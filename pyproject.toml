@@ -20,3 +20,6 @@ pandas-stubs = "^2.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+volnorm = "volnorm.cli:main"

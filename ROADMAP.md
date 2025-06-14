@@ -20,9 +20,9 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 ## 🚧 Phase 2: Feature Expansion
 
 - [x] Rolling metrics: EMA, max, min, z-score
-- [ ] True Range and proper ATR
-- [ ] Median Absolute Deviation as robust volatility
-- [ ] Volatility regime classification
+- [x] True Range and proper ATR
+- [x] Median Absolute Deviation as robust volatility
+- [x] Volatility regime classification
 - [ ] Denoising and smoothing (e.g., low-pass filters)
 
 ---
@@ -31,7 +31,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 
 - [x] Create `pyproject.toml` with Poetry or setuptools
 - [x] Organize modules into `core/`, `features/`, `transforms/`
-- [ ] Add CLI entry point for feature generation from CSV
+- [x] Add CLI entry point for feature generation from CSV
 - [ ] Add examples in Jupyter notebooks
 - [ ] Publish to PyPI (optional)
 
