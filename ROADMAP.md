@@ -32,7 +32,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 - [x] Create `pyproject.toml` with Poetry or setuptools
 - [x] Organize modules into `core/`, `features/`, `transforms/`
 - [x] Add CLI entry point for feature generation from CSV
-- [ ] Add examples in Jupyter notebooks
+- [x] Add examples in Jupyter notebooks
 - [ ] Publish to PyPI (optional)
 
 ---
@@ -40,7 +40,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 ## 🧪 Testing & Validation
 
 - [x] Add `pytest`-based test suite
-- [ ] Include synthetic data generators for robustness testing
+- [x] Include synthetic data generators for robustness testing
 - [ ] Validate against known data (e.g., SPY, AAPL)
 
 ---

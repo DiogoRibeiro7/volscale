@@ -17,6 +17,7 @@ from .volatility import (
     classify_volatility,
 )
 from .smoothing import low_pass_filter
+from .synthetic import generate_synthetic_prices
 
 __all__ = [
     "compute_log_returns",
@@ -34,4 +35,5 @@ __all__ = [
     "compute_mad",
     "classify_volatility",
     "low_pass_filter",
+    "generate_synthetic_prices",
 ]

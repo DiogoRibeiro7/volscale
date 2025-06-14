@@ -50,7 +50,8 @@ import pandas as pd
 from volnorm import build_normalized_features
 
 # also available:
-#   compute_true_range, compute_atr, compute_mad, classify_volatility, low_pass_filter
+#   compute_true_range, compute_atr, compute_mad,
+#   classify_volatility, low_pass_filter, generate_synthetic_prices
 
 prices = pd.Series([100, 101, 102, 103, 104])
 features = build_normalized_features(prices, window=3)
@@ -65,6 +66,18 @@ The package offers a basic low-pass filter for quick noise reduction:
 smoothed = low_pass_filter(prices, window=5)
 ```
 
+## Synthetic data
+
+Generate a random-walk price series for quick experiments:
+
+```python
+from volnorm.synthetic import generate_synthetic_prices
+prices = generate_synthetic_prices(100, seed=42)
+```
+
+See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a
+full demo.
+
 ## Project layout
 
 ```plaintext
@@ -75,10 +88,12 @@ src/
     ├── rolling.py        # SMA, EMA, ATR proxy, std, etc.
     ├── volatility.py     # true range, ATR, MAD, classification
     ├── smoothing.py      # low-pass filters and denoising
+    ├── synthetic.py      # random price series generators
     ├── normalize.py      # volatility normalization
     └── features.py       # feature builder
 tests/
     └── ...               # unit tests
 ```
 
+See the `notebooks/` directory for an interactive example.
 Further planned work is described in [ROADMAP.md](ROADMAP.md).
