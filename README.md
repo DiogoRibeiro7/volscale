@@ -8,10 +8,11 @@ stable features.
 ## Installation
 
 This project uses [Poetry](https://python-poetry.org/) for dependency
-management. After cloning the repository install the dependencies with:
+management and packaging. After cloning the repository install the
+dependencies and the package with:
 
 ```bash
-poetry install --no-root
+poetry install
 ```
 
 ## Running the tests
@@ -20,7 +21,7 @@ Tests rely on `pytest` and the development tools listed in
 `pyproject.toml`. Run the suite from the repository root:
 
 ```bash
-PYTHONPATH="$(pwd)/.." poetry run pytest -q
+poetry run pytest -q
 ```
 
 The CI also checks formatting, static types and linting. You can run them
@@ -46,13 +47,15 @@ print(features.dropna())
 ## Project layout
 
 ```plaintext
-volnorm/
-├── __init__.py
-├── core.py           # basic transformations like log returns
-├── rolling.py        # SMA, EMA, ATR proxy, std, etc.
-├── normalize.py      # volatility normalization
-├── features.py       # feature builder
-└── tests/            # unit tests
+src/
+└── volnorm/
+    ├── __init__.py
+    ├── core.py           # basic transformations like log returns
+    ├── rolling.py        # SMA, EMA, ATR proxy, std, etc.
+    ├── normalize.py      # volatility normalization
+    └── features.py       # feature builder
+tests/
+    └── ...               # unit tests
 ```
 
 Further planned work is described in [ROADMAP.md](ROADMAP.md).
