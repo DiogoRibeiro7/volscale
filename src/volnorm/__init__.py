@@ -7,6 +7,7 @@ from .rolling import (
     compute_rolling_max,
     compute_rolling_min,
     compute_zscore,
+    compute_wma,
 )
 from .normalize import normalize_feature
 from .features import build_normalized_features
@@ -21,6 +22,7 @@ from .volatility import (
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
 from .datasets import load_spy_sample
+    "compute_wma",
     "compute_bollinger_bands",
     "compute_keltner_channels",
     "load_spy_sample",

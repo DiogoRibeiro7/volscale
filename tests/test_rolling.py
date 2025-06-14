@@ -8,6 +8,7 @@ from volnorm.rolling import (
     compute_rolling_max,
     compute_rolling_min,
     compute_zscore,
+    compute_wma,
 )
 
 
@@ -81,3 +82,14 @@ def test_zscore_constant():
     s = pd.Series([5, 5, 5, 5])
     result = compute_zscore(s, window=2)
     assert result.isna().all()
+
+
+def test_wma():
+    s = pd.Series([1, 2, 3, 4, 5])
+    result = compute_wma(s, window=3)
+    weights = np.arange(1, 4)
+    expected = s.rolling(window=3, min_periods=3).apply(
+        lambda x: np.dot(x, weights) / weights.sum(),
+        raw=True,
+    )
+    pd.testing.assert_series_equal(result, expected)

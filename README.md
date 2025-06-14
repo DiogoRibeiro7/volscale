@@ -52,7 +52,7 @@ from volnorm import build_normalized_features
 # also available:
 #   compute_true_range, compute_atr, compute_mad,
 #   classify_volatility, compute_bollinger_bands,
-#   compute_keltner_channels,
+#   compute_keltner_channels, compute_wma,
 #   low_pass_filter, generate_synthetic_prices
 
 prices = pd.Series([100, 101, 102, 103, 104])
@@ -66,6 +66,15 @@ The package offers a basic low-pass filter for quick noise reduction:
 
 ```python
 smoothed = low_pass_filter(prices, window=5)
+```
+
+## Weighted Moving Average
+
+A linearly weighted moving average giving more emphasis to recent values:
+
+```python
+from volnorm.rolling import compute_wma
+wma = compute_wma(prices, window=10)
 ```
 
 ## Bollinger Bands

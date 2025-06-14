@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -38,3 +39,12 @@ def compute_zscore(values: pd.Series, window: int) -> pd.Series:
     mean = compute_sma(values, window)
     std = compute_rolling_std(values, window)
     return (values - mean) / std
+
+
+def compute_wma(values: pd.Series, window: int) -> pd.Series:
+    """Weighted moving average with linearly increasing weights."""
+    weights = np.arange(1, window + 1)
+    return values.rolling(window=window, min_periods=window).apply(
+        lambda x: np.dot(x, weights) / weights.sum(),
+        raw=True,
+    )

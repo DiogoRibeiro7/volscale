@@ -20,6 +20,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 ## 🚧 Phase 2: Feature Expansion
 
 - [x] Rolling metrics: EMA, max, min, z-score
+- [x] Weighted Moving Average
 - [x] True Range and proper ATR
 - [x] Median Absolute Deviation as robust volatility
 - [x] Volatility regime classification
