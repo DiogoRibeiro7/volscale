@@ -19,6 +19,8 @@ from .volatility import (
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
 from .datasets import load_spy_sample
+    "load_spy_sample",
+from .datasets import load_spy_sample
 
 __all__ = [
     "compute_log_returns",

@@ -7,6 +7,9 @@ packages = [{ include = "volnorm", from = "src" }]
 include = [
     { path = "src/volnorm/data/spy_sample.csv" },
 ]
+include = [
+    { path = "src/volnorm/data/spy_sample.csv" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"

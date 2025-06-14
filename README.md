@@ -90,6 +90,18 @@ df = load_spy_sample()
 This can be useful for trying out the CLI or unit tests without fetching
 external data.
 
+## Sample data
+
+The package bundles a small snippet of SPY prices for validation and examples:
+
+```python
+from volnorm import load_spy_sample
+df = load_spy_sample()
+```
+
+This can be useful for trying out the CLI or unit tests without fetching
+external data.
+
 ## Project layout
 
 ```plaintext
