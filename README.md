@@ -50,11 +50,19 @@ import pandas as pd
 from volnorm import build_normalized_features
 
 # also available:
-#   compute_true_range, compute_atr, compute_mad, classify_volatility
+#   compute_true_range, compute_atr, compute_mad, classify_volatility, low_pass_filter
 
 prices = pd.Series([100, 101, 102, 103, 104])
 features = build_normalized_features(prices, window=3)
 print(features.dropna())
+```
+
+## Denoising and smoothing
+
+The package offers a basic low-pass filter for quick noise reduction:
+
+```python
+smoothed = low_pass_filter(prices, window=5)
 ```
 
 ## Project layout
@@ -66,6 +74,7 @@ src/
     ├── core.py           # basic transformations like log returns
     ├── rolling.py        # SMA, EMA, ATR proxy, std, etc.
     ├── volatility.py     # true range, ATR, MAD, classification
+    ├── smoothing.py      # low-pass filters and denoising
     ├── normalize.py      # volatility normalization
     └── features.py       # feature builder
 tests/

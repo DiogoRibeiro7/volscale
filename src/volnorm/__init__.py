@@ -16,6 +16,7 @@ from .volatility import (
     compute_mad,
     classify_volatility,
 )
+from .smoothing import low_pass_filter
 
 __all__ = [
     "compute_log_returns",
@@ -32,4 +33,5 @@ __all__ = [
     "compute_atr",
     "compute_mad",
     "classify_volatility",
+    "low_pass_filter",
 ]
