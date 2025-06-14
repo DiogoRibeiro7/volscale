@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "Volatility-normalized feature engineering toolkit for financial time series"
 authors = ["Your Name <you@example.com>"]
 packages = [{ include = "volnorm", from = "src" }]
+include = [
+    { path = "src/volnorm/data/spy_sample.csv" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"

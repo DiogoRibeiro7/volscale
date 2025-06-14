@@ -78,6 +78,18 @@ prices = generate_synthetic_prices(100, seed=42)
 See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a
 full demo.
 
+## Sample data
+
+The package bundles a small snippet of SPY prices for validation and examples:
+
+```python
+from volnorm import load_spy_sample
+df = load_spy_sample()
+```
+
+This can be useful for trying out the CLI or unit tests without fetching
+external data.
+
 ## Project layout
 
 ```plaintext

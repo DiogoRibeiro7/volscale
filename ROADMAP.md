@@ -41,7 +41,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 
 - [x] Add `pytest`-based test suite
 - [x] Include synthetic data generators for robustness testing
-- [ ] Validate against known data (e.g., SPY, AAPL)
+- [x] Validate against known data (e.g., SPY, AAPL)
 
 ---
 
