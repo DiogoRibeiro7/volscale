@@ -6,6 +6,7 @@ from volnorm.volatility import (
     classify_volatility,
     compute_bollinger_bands,
     compute_keltner_channels,
+    compute_donchian_channels,
 )
 
 
@@ -54,3 +55,12 @@ def test_keltner_channels():
     channels = compute_keltner_channels(high, low, close, window=2, atr_multiplier=1)
     assert channels.columns.tolist() == ["middle", "upper", "lower"]
     assert channels["upper"].iloc[3] > channels["middle"].iloc[3]
+
+
+def test_donchian_channels():
+    high = pd.Series([10, 12, 13, 14])
+    low = pd.Series([8, 9, 10, 11])
+    channels = compute_donchian_channels(high, low, window=2)
+    assert channels.columns.tolist() == ["middle", "upper", "lower"]
+    assert channels["upper"].iloc[3] == 14
+    assert channels["lower"].iloc[3] == 10

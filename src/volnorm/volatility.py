@@ -81,3 +81,13 @@ def compute_keltner_channels(
     upper = ema + atr_multiplier * atr
     lower = ema - atr_multiplier * atr
     return pd.DataFrame({"middle": ema, "upper": upper, "lower": lower})
+
+
+def compute_donchian_channels(
+    high: pd.Series, low: pd.Series, window: int
+) -> pd.DataFrame:
+    """Return Donchian Channels using rolling extremes."""
+    upper = high.rolling(window=window, min_periods=window).max()
+    lower = low.rolling(window=window, min_periods=window).min()
+    middle = (upper + lower) / 2
+    return pd.DataFrame({"middle": middle, "upper": upper, "lower": lower})

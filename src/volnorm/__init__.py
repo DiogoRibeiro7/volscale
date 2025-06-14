@@ -18,6 +18,7 @@ from .volatility import (
     classify_volatility,
     compute_bollinger_bands,
     compute_keltner_channels,
+    compute_donchian_channels,
 )
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
@@ -25,6 +26,7 @@ from .datasets import load_spy_sample
     "compute_wma",
     "compute_bollinger_bands",
     "compute_keltner_channels",
+    "compute_donchian_channels",
     "load_spy_sample",
 from .datasets import load_spy_sample
 
