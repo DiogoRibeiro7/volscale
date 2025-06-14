@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from .rolling import compute_sma, compute_rolling_std
 
 
 def compute_true_range(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
@@ -53,3 +54,14 @@ def classify_volatility(
         return "medium"
 
     return volatility.apply(_label)
+
+
+def compute_bollinger_bands(
+    prices: pd.Series, window: int, *, num_std: float = 2.0
+) -> pd.DataFrame:
+    """Return Bollinger Bands as a DataFrame."""
+    sma = compute_sma(prices, window)
+    std = compute_rolling_std(prices, window)
+    upper = sma + num_std * std
+    lower = sma - num_std * std
+    return pd.DataFrame({"middle": sma, "upper": upper, "lower": lower})

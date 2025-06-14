@@ -4,6 +4,7 @@ from volnorm.volatility import (
     compute_atr,
     compute_mad,
     classify_volatility,
+    compute_bollinger_bands,
 )
 
 
@@ -36,3 +37,10 @@ def test_classify_volatility():
     vol = pd.Series([0.1, 0.2, 0.3, 0.4])
     labels = classify_volatility(vol, low_quantile=0.25, high_quantile=0.75)
     assert set(labels.unique()) == {"low", "medium", "high"}
+
+
+def test_bollinger_bands():
+    s = pd.Series([1, 2, 3, 4, 5])
+    bands = compute_bollinger_bands(s, window=3, num_std=1)
+    assert bands.columns.tolist() == ["middle", "upper", "lower"]
+    assert bands["upper"].iloc[2] > bands["middle"].iloc[2]

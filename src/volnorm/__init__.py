@@ -15,10 +15,12 @@ from .volatility import (
     compute_atr,
     compute_mad,
     classify_volatility,
+    compute_bollinger_bands,
 )
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
 from .datasets import load_spy_sample
+    "compute_bollinger_bands",
     "load_spy_sample",
 from .datasets import load_spy_sample
 

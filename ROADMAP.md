@@ -24,6 +24,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 - [x] Median Absolute Deviation as robust volatility
 - [x] Volatility regime classification
 - [x] Denoising and smoothing (e.g., low-pass filters)
+- [x] Bollinger Bands indicator
 
 ---
 

@@ -51,7 +51,8 @@ from volnorm import build_normalized_features
 
 # also available:
 #   compute_true_range, compute_atr, compute_mad,
-#   classify_volatility, low_pass_filter, generate_synthetic_prices
+#   classify_volatility, compute_bollinger_bands,
+#   low_pass_filter, generate_synthetic_prices
 
 prices = pd.Series([100, 101, 102, 103, 104])
 features = build_normalized_features(prices, window=3)
@@ -64,6 +65,15 @@ The package offers a basic low-pass filter for quick noise reduction:
 
 ```python
 smoothed = low_pass_filter(prices, window=5)
+```
+
+## Bollinger Bands
+
+Calculate basic Bollinger Bands around a rolling mean:
+
+```python
+from volnorm.volatility import compute_bollinger_bands
+bands = compute_bollinger_bands(prices, window=20)
 ```
 
 ## Synthetic data
