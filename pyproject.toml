@@ -3,7 +3,13 @@ name = "volnorm"
 version = "0.1.0"
 description = "Volatility-normalized feature engineering toolkit for financial time series"
 authors = ["Your Name <you@example.com>"]
-packages = [{ include = "volnorm" }]
+packages = [{ include = "volnorm", from = "src" }]
+include = [
+    { path = "src/volnorm/data/spy_sample.csv" },
+]
+include = [
+    { path = "src/volnorm/data/spy_sample.csv" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -20,3 +26,6 @@ pandas-stubs = "^2.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+volnorm = "volnorm.cli:main"

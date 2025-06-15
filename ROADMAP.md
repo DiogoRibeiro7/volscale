@@ -12,36 +12,40 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 - [x] Simple Moving Average (SMA)
 - [x] ATR proxy via rolling high-low range
 - [x] Combine normalized features into a clean interface
-- [ ] Add unit tests for all core functions
-- [ ] Document all methods with type hints and docstrings
+- [x] Add unit tests for all core functions
+- [x] Document all methods with type hints and docstrings
 
 ---
 
 ## 🚧 Phase 2: Feature Expansion
 
-- [ ] Rolling metrics: EMA, max, min, z-score
-- [ ] True Range and proper ATR
-- [ ] Median Absolute Deviation as robust volatility
-- [ ] Volatility regime classification
-- [ ] Denoising and smoothing (e.g., low-pass filters)
+- [x] Rolling metrics: EMA, max, min, z-score
+- [x] Weighted Moving Average
+- [x] True Range and proper ATR
+- [x] Median Absolute Deviation as robust volatility
+- [x] Volatility regime classification
+- [x] Denoising and smoothing (e.g., low-pass filters)
+- [x] Bollinger Bands indicator
+- [x] Keltner Channels indicator
+- [x] Donchian Channels indicator
 
 ---
 
 ## 🚀 Phase 3: Package Readiness
 
-- [ ] Create `pyproject.toml` with Poetry or setuptools
-- [ ] Organize modules into `core/`, `features/`, `transforms/`
-- [ ] Add CLI entry point for feature generation from CSV
-- [ ] Add examples in Jupyter notebooks
+- [x] Create `pyproject.toml` with Poetry or setuptools
+- [x] Organize modules into `core/`, `features/`, `transforms/`
+- [x] Add CLI entry point for feature generation from CSV
+- [x] Add examples in Jupyter notebooks
 - [ ] Publish to PyPI (optional)
 
 ---
 
 ## 🧪 Testing & Validation
 
-- [ ] Add `pytest`-based test suite
-- [ ] Include synthetic data generators for robustness testing
-- [ ] Validate against known data (e.g., SPY, AAPL)
+- [x] Add `pytest`-based test suite
+- [x] Include synthetic data generators for robustness testing
+- [x] Validate against known data (e.g., SPY, AAPL)
 
 ---
 
