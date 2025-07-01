@@ -19,15 +19,11 @@ from .volatility import (
     compute_bollinger_bands,
     compute_keltner_channels,
     compute_donchian_channels,
+    compute_realized_volatility,
+    compute_garch_forecast,
 )
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
-from .datasets import load_spy_sample
-    "compute_wma",
-    "compute_bollinger_bands",
-    "compute_keltner_channels",
-    "compute_donchian_channels",
-    "load_spy_sample",
 from .datasets import load_spy_sample
 
 __all__ = [
@@ -39,12 +35,18 @@ __all__ = [
     "compute_rolling_max",
     "compute_rolling_min",
     "compute_zscore",
+    "compute_wma",
     "normalize_feature",
     "build_normalized_features",
     "compute_true_range",
     "compute_atr",
     "compute_mad",
     "classify_volatility",
+    "compute_bollinger_bands",
+    "compute_keltner_channels",
+    "compute_donchian_channels",
+    "compute_realized_volatility",
+    "compute_garch_forecast",
     "low_pass_filter",
     "generate_synthetic_prices",
     "load_spy_sample",

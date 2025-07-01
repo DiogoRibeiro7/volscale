@@ -69,3 +69,33 @@ The current shortlist for the repository name includes:
 
 To offer a lightweight, dependency-free package that helps researchers, quants, and data scientists make their features bounded, stable, and more model-friendly—especially when working with volatile financial data.
 
+---
+
+## 🤝 Contributing
+
+The project welcomes community involvement. If you have ideas for new features or improvements, open an issue or send a pull request. For questions, reach out to **Diogo Ribeiro** (`DiogoRibeiro7`) at
+<diogo.debastos.ribeiro@gmail.com> (personal) or <dfr@esmad.ipp.pt> (professional).
+
+## 📫 Maintainer
+
+**Diogo Ribeiro** – ESMAD, Instituto Politécnico do Porto  
+GitHub: [`DiogoRibeiro7`](https://github.com/DiogoRibeiro7)  
+Personal: <diogo.debastos.ribeiro@gmail.com>  
+Professional: <dfr@esmad.ipp.pt>  
+ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072)
+
+---
+
+## 🔮 Future Directions
+
+Further ideas to extend volatility normalization:
+
+- Realized volatility from intraday data *(implemented)*
+- GARCH-based volatility estimates for forecasting *(implemented)*
+- Integration of implied volatility from options data
+- Cross-sectional normalization across multiple assets
+- Regime-switching models for volatility regimes
+- Event-driven features reacting to scheduled announcements
+- Incremental computations for streaming data
+- Visualization helpers for normalized indicators
+

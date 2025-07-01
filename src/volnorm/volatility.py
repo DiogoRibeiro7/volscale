@@ -91,3 +91,70 @@ def compute_donchian_channels(
     lower = low.rolling(window=window, min_periods=window).min()
     middle = (upper + lower) / 2
     return pd.DataFrame({"middle": middle, "upper": upper, "lower": lower})
+
+
+def compute_realized_volatility(prices: pd.Series, *, freq: str = "D") -> pd.Series:
+    """Compute realized volatility from intraday prices.
+
+    Args:
+        prices: Series of prices indexed by a ``DatetimeIndex`` at intraday frequency.
+        freq: Frequency string for resampling the output, defaults to daily (``"D"``).
+
+    Returns:
+        Realized volatility aggregated at the specified frequency.
+    """
+
+    # Compute log returns and drop the initial NaN introduced by the shift
+    log_returns = np.log(prices / prices.shift(1)).dropna()
+
+    # Sum squared returns within each resampling window and take the square root
+    return log_returns.pow(2).resample(freq).sum().pow(0.5)
+
+
+def compute_garch_forecast(
+    returns: pd.Series,
+    horizon: int = 1,
+    *,
+    omega: float = 1e-6,
+    alpha: float = 0.05,
+    beta: float = 0.9,
+) -> pd.Series:
+    """Forecast volatility using a simple GARCH(1,1) model.
+
+    This function implements an unparameterized GARCH(1,1) recursion. It
+    estimates conditional variance based on the input returns and projects it
+    forward ``horizon`` steps. The parameters ``omega``, ``alpha`` and ``beta``
+    control the constant, lagged squared return and lagged variance terms,
+    respectively.
+
+    Args:
+        returns: Series of asset returns.
+        horizon: Number of future periods to forecast.
+        omega: Constant term of the model.
+        alpha: Coefficient for lagged squared returns.
+        beta: Coefficient for lagged variance.
+
+    Returns:
+        Forecasted volatility values for horizons ``1`` to ``horizon``.
+    """
+
+    if horizon < 1:
+        raise ValueError("horizon must be at least 1")
+
+    returns = returns.dropna()
+    if returns.empty:
+        raise ValueError("returns series is empty")
+
+    variance = returns.var()
+    prev_ret = returns.iloc[0]
+    for r in returns.iloc[1:]:
+        variance = omega + alpha * prev_ret**2 + beta * variance
+        prev_ret = r
+
+    forecasts = []
+    for _ in range(horizon):
+        variance = omega + (alpha + beta) * variance
+        forecasts.append(np.sqrt(variance))
+
+    index = pd.RangeIndex(start=1, stop=horizon + 1, name="h")
+    return pd.Series(forecasts, index=index, name="volatility")

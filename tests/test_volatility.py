@@ -7,7 +7,10 @@ from volnorm.volatility import (
     compute_bollinger_bands,
     compute_keltner_channels,
     compute_donchian_channels,
+    compute_realized_volatility,
+    compute_garch_forecast,
 )
+import numpy as np
 
 
 def test_true_range():
@@ -64,3 +67,32 @@ def test_donchian_channels():
     assert channels.columns.tolist() == ["middle", "upper", "lower"]
     assert channels["upper"].iloc[3] == 14
     assert channels["lower"].iloc[3] == 10
+
+
+def test_realized_volatility():
+    idx = pd.DatetimeIndex(
+        [
+            "2024-01-01 09:30",
+            "2024-01-01 09:31",
+            "2024-01-01 09:32",
+            "2024-01-02 09:30",
+            "2024-01-02 09:31",
+            "2024-01-02 09:32",
+        ]
+    )
+    prices = pd.Series([100, 101, 102, 103, 104, 105], index=idx)
+
+    result = compute_realized_volatility(prices)
+
+    log_returns = (prices / prices.shift(1)).apply(np.log).dropna()
+    expected = log_returns.pow(2).resample("D").sum().pow(0.5)
+
+    pd.testing.assert_series_equal(result, expected)
+
+
+def test_garch_forecast():
+    returns = pd.Series([0.01, -0.02, 0.015, -0.005])
+    forecast = compute_garch_forecast(returns, horizon=2)
+    assert len(forecast) == 2
+    assert forecast.index.tolist() == [1, 2]
+    assert (forecast > 0).all()

@@ -7,9 +7,6 @@ packages = [{ include = "volnorm", from = "src" }]
 include = [
     { path = "src/volnorm/data/spy_sample.csv" },
 ]
-include = [
-    { path = "src/volnorm/data/spy_sample.csv" },
-]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -22,6 +19,7 @@ ruff = "^0.4.0"
 mypy = "^1.9"
 black = "^24.4"
 pandas-stubs = "^2.2"
+tomli = "^2.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -29,3 +27,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 volnorm = "volnorm.cli:main"
+
+[tool.mypy]
+ignore_missing_imports = true
