@@ -40,6 +40,7 @@ print(features.dropna())
 - Implied volatility extraction from options prices
 - Bollinger, Keltner and Donchian channel helpers
 - Low-pass filtering and basic synthetic data generation
+- Cross-sectional normalization across multiple assets
 
 See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a complete example.
 
