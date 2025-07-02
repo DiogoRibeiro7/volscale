@@ -9,8 +9,10 @@ from volnorm.volatility import (
     compute_donchian_channels,
     compute_realized_volatility,
     compute_garch_forecast,
+    compute_implied_volatility,
 )
 import numpy as np
+import math
 
 
 def test_true_range():
@@ -96,3 +98,27 @@ def test_garch_forecast():
     assert len(forecast) == 2
     assert forecast.index.tolist() == [1, 2]
     assert (forecast > 0).all()
+
+
+def test_implied_volatility():
+    spot = 100.0
+    strike = 105.0
+    time = 0.5
+    rate = 0.01
+    true_vol = 0.2
+
+    # Black-Scholes formula for a call option
+    d1 = (np.log(spot / strike) + (rate + 0.5 * true_vol**2) * time) / (
+        true_vol * np.sqrt(time)
+    )
+    d2 = d1 - true_vol * np.sqrt(time)
+
+    def cdf(x: float) -> float:
+        return 0.5 * (1 + math.erf(x / np.sqrt(2)))
+
+    price = spot * cdf(d1) - strike * np.exp(-rate * time) * cdf(d2)
+
+    est = compute_implied_volatility(
+        price, spot, strike, time, rate, option_type="call"
+    )
+    assert abs(est - true_vol) < 1e-4

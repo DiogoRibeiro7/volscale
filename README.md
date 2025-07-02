@@ -37,6 +37,7 @@ print(features.dropna())
 - Rolling statistics including SMA, EMA and WMA
 - Realized volatility computed from intraday data
 - GARCH-based volatility forecasts
+- Implied volatility extraction from options prices
 - Bollinger, Keltner and Donchian channel helpers
 - Low-pass filtering and basic synthetic data generation
 

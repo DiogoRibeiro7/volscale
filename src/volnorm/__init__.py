@@ -21,6 +21,7 @@ from .volatility import (
     compute_donchian_channels,
     compute_realized_volatility,
     compute_garch_forecast,
+    compute_implied_volatility,
 )
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
@@ -47,6 +48,7 @@ __all__ = [
     "compute_donchian_channels",
     "compute_realized_volatility",
     "compute_garch_forecast",
+    "compute_implied_volatility",
     "low_pass_filter",
     "generate_synthetic_prices",
     "load_spy_sample",

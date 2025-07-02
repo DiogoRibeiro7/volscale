@@ -92,7 +92,7 @@ Further ideas to extend volatility normalization:
 
 - Realized volatility from intraday data *(implemented)*
 - GARCH-based volatility estimates for forecasting *(implemented)*
-- Integration of implied volatility from options data
+- Integration of implied volatility from options data *(implemented)*
 - Cross-sectional normalization across multiple assets
 - Regime-switching models for volatility regimes
 - Event-driven features reacting to scheduled announcements
