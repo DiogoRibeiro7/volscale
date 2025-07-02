@@ -2,7 +2,7 @@
 name = "volnorm"
 version = "0.1.0"
 description = "Volatility-normalized feature engineering toolkit for financial time series"
-authors = ["Your Name <you@example.com>"]
+authors = ["Diogo Ribeiro <dfr@esmad.ipp.pt>"]
 packages = [{ include = "volnorm", from = "src" }]
 include = [
     { path = "src/volnorm/data/spy_sample.csv" },
