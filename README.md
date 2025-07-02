@@ -42,6 +42,7 @@ print(features.dropna())
 - Low-pass filtering and basic synthetic data generation
 - Cross-sectional normalization across multiple assets
 - Regime-switching models for volatility regimes
+- Event-driven features for scheduled announcements
 
 See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a complete example.
 

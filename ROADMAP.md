@@ -95,7 +95,7 @@ Further ideas to extend volatility normalization:
 - Integration of implied volatility from options data *(implemented)*
 - Cross-sectional normalization across multiple assets *(implemented)*
 - Regime-switching models for volatility regimes *(implemented)*
-- Event-driven features reacting to scheduled announcements
+- Event-driven features reacting to scheduled announcements *(implemented)*
 - Incremental computations for streaming data
 - Visualization helpers for normalized indicators
 
