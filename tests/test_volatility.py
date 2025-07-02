@@ -10,6 +10,7 @@ from volnorm.volatility import (
     compute_realized_volatility,
     compute_garch_forecast,
     compute_implied_volatility,
+    compute_regime_probabilities,
 )
 import numpy as np
 import math
@@ -122,3 +123,15 @@ def test_implied_volatility():
         price, spot, strike, time, rate, option_type="call"
     )
     assert abs(est - true_vol) < 1e-4
+
+
+def test_regime_probabilities_identify_high_low():
+    np.random.seed(0)
+    low = np.random.normal(0, 0.01, size=30)
+    high = np.random.normal(0, 0.05, size=30)
+    returns = pd.Series(np.concatenate([low, high, low]))
+
+    probs = compute_regime_probabilities(returns, n_iter=5)
+
+    assert probs.loc[:29, "low"].mean() > 0.5
+    assert probs.loc[30:59, "high"].mean() > 0.5

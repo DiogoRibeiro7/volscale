@@ -230,3 +230,87 @@ def compute_implied_volatility(
         volatility -= diff / vega
 
     raise RuntimeError("implied volatility did not converge")
+
+
+def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.DataFrame:
+    """Estimate volatility regimes using a two-state Markov model.
+
+    The function fits a simple Gaussian hidden Markov model (HMM) with
+    low- and high-volatility states. It iteratively updates regime
+    probabilities using the expectation-maximization algorithm. Returns
+    must represent asset returns and are assumed to have zero mean.
+
+    Args:
+        returns: Series of asset returns.
+        n_iter: Number of EM iterations used for parameter estimation.
+
+    Returns:
+        DataFrame with columns ``low`` and ``high`` giving the posterior
+        probability of each regime.
+
+    Raises:
+        ValueError: If ``returns`` is empty.
+    """
+
+    returns = returns.dropna().astype(float)
+    if returns.empty:
+        raise ValueError("returns series is empty")
+
+    r = returns.to_numpy()
+    n = len(r)
+
+    def logsumexp(a: np.ndarray) -> float:
+        a_max = np.max(a)
+        return a_max + np.log(np.exp(a - a_max).sum())
+
+    sigma_low = float(np.std(r)) * 0.5
+    sigma_high = float(np.std(r)) * 2.0
+    trans = np.array([[0.95, 0.05], [0.05, 0.95]], dtype=float)
+    pi = np.array([0.5, 0.5], dtype=float)
+
+    for _ in range(n_iter):
+        log_lik = np.vstack(
+            [
+                -0.5 * ((r / sigma_low) ** 2 + np.log(2 * np.pi * sigma_low**2)),
+                -0.5 * ((r / sigma_high) ** 2 + np.log(2 * np.pi * sigma_high**2)),
+            ]
+        ).T
+
+        log_alpha = np.zeros((n, 2))
+        log_alpha[0] = np.log(pi) + log_lik[0]
+        for t in range(1, n):
+            for j in range(2):
+                log_alpha[t, j] = log_lik[t, j] + logsumexp(
+                    log_alpha[t - 1] + np.log(trans[:, j])
+                )
+
+        log_beta = np.zeros((n, 2))
+        for t in range(n - 2, -1, -1):
+            for i in range(2):
+                log_beta[t, i] = logsumexp(
+                    np.log(trans[i]) + log_lik[t + 1] + log_beta[t + 1]
+                )
+
+        log_gamma = log_alpha + log_beta
+        norm = np.apply_along_axis(logsumexp, 1, log_gamma)
+        gamma = np.exp(log_gamma - norm[:, None])
+
+        log_xi = np.zeros((n - 1, 2, 2))
+        for t in range(n - 1):
+            for i in range(2):
+                for j in range(2):
+                    log_xi[t, i, j] = (
+                        log_alpha[t, i]
+                        + np.log(trans[i, j])
+                        + log_lik[t + 1, j]
+                        + log_beta[t + 1, j]
+                    )
+            log_xi[t] -= logsumexp(log_xi[t].ravel())
+        xi = np.exp(log_xi)
+
+        pi = gamma[0]
+        trans = xi.sum(axis=0) / gamma[:-1].sum(axis=0)[:, None]
+        sigma_low = math.sqrt((gamma[:, 0] * r**2).sum() / gamma[:, 0].sum())
+        sigma_high = math.sqrt((gamma[:, 1] * r**2).sum() / gamma[:, 1].sum())
+
+    return pd.DataFrame(gamma, index=returns.index, columns=["low", "high"])

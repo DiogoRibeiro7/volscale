@@ -22,6 +22,7 @@ from .volatility import (
     compute_realized_volatility,
     compute_garch_forecast,
     compute_implied_volatility,
+    compute_regime_probabilities,
 )
 from .smoothing import low_pass_filter
 from .synthetic import generate_synthetic_prices
@@ -50,6 +51,7 @@ __all__ = [
     "compute_realized_volatility",
     "compute_garch_forecast",
     "compute_implied_volatility",
+    "compute_regime_probabilities",
     "low_pass_filter",
     "generate_synthetic_prices",
     "load_spy_sample",
