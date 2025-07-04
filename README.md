@@ -1,161 +1,77 @@
-# volnorm
+# VolNorm
 
-Volnorm is a lightweight toolkit for volatility-normalized feature engineering in
-financial time series. It contains helper functions for rolling statistics,
-log-return computation and normalization utilities that make it easier to build
-stable features.
+VolNorm provides utilities for volatility-normalized feature engineering in financial time series. The library exposes rolling statistics, normalization helpers and a command line interface for quickly generating features from CSV data.
 
 ## Installation
 
-This project uses [Poetry](https://python-poetry.org/) for dependency
-management and packaging. After cloning the repository install the
-dependencies and the package with:
+Install the project with [Poetry](https://python-poetry.org/):
 
 ```bash
 poetry install
 ```
 
-## Running the tests
+## Quick start
 
-Tests rely on `pytest` and the development tools listed in
-`pyproject.toml`. Run the suite from the repository root:
-
-```bash
-poetry run pytest -q
-```
-
-The CI also checks formatting, static types and linting. You can run them
-manually using:
-
-```bash
-poetry run ruff check .
-poetry run black --check .
-poetry run mypy .
-```
-
-## Command line interface
-
-Generate normalized features directly from CSV:
+Generate normalized features from a CSV file with the CLI:
 
 ```bash
 poetry run volnorm prices.csv --column close --window 20 --output features.csv
 ```
 
-If `--output` is omitted the features are printed to standard output.
-
-## Usage example
+Use the library directly in Python:
 
 ```python
 import pandas as pd
 from volnorm import build_normalized_features
-
-# also available:
-#   compute_true_range, compute_atr, compute_mad,
-#   classify_volatility, compute_bollinger_bands,
-#   compute_keltner_channels, compute_donchian_channels,
-#   compute_wma, low_pass_filter, generate_synthetic_prices
 
 prices = pd.Series([100, 101, 102, 103, 104])
 features = build_normalized_features(prices, window=3)
 print(features.dropna())
 ```
 
-## Denoising and smoothing
+## Features
 
-The package offers a basic low-pass filter for quick noise reduction:
+- Log returns and rolling volatility
+- ATR proxies and true range calculations
+- Volatility normalization of indicators
+- Rolling statistics including SMA, EMA and WMA
+- Realized volatility computed from intraday data
+- GARCH-based volatility forecasts
+- Implied volatility extraction from options prices
+- Bollinger, Keltner and Donchian channel helpers
+- Low-pass filtering and basic synthetic data generation
+- Cross-sectional normalization across multiple assets
+- Regime-switching models for volatility regimes
+- Event-driven features for scheduled announcements
 
-```python
-smoothed = low_pass_filter(prices, window=5)
-```
-
-## Weighted Moving Average
-
-A linearly weighted moving average giving more emphasis to recent values:
-
-```python
-from volnorm.rolling import compute_wma
-wma = compute_wma(prices, window=10)
-```
-
-## Bollinger Bands
-
-Calculate basic Bollinger Bands around a rolling mean:
-
-```python
-from volnorm.volatility import compute_bollinger_bands
-bands = compute_bollinger_bands(prices, window=20)
-```
-
-## Keltner Channels
-
-ATR-based volatility bands using an EMA centerline:
-
-```python
-from volnorm.volatility import compute_keltner_channels
-channels = compute_keltner_channels(high, low, close, window=20, atr_multiplier=2)
-```
-
-## Donchian Channels
-
-Rolling high/low extremes forming breakout bands:
-
-```python
-from volnorm.volatility import compute_donchian_channels
-donchian = compute_donchian_channels(high, low, window=20)
-```
-
-## Synthetic data
-
-Generate a random-walk price series for quick experiments:
-
-```python
-from volnorm.synthetic import generate_synthetic_prices
-prices = generate_synthetic_prices(100, seed=42)
-```
-
-See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a
-full demo.
-
-## Sample data
-
-The package bundles a small snippet of SPY prices for validation and examples:
-
-```python
-from volnorm import load_spy_sample
-df = load_spy_sample()
-```
-
-This can be useful for trying out the CLI or unit tests without fetching
-external data.
-
-## Sample data
-
-The package bundles a small snippet of SPY prices for validation and examples:
-
-```python
-from volnorm import load_spy_sample
-df = load_spy_sample()
-```
-
-This can be useful for trying out the CLI or unit tests without fetching
-external data.
+See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a complete example.
 
 ## Project layout
 
-```plaintext
+```text
 src/
 └── volnorm/
-    ├── __init__.py
-    ├── core.py           # basic transformations like log returns
-    ├── rolling.py        # SMA, EMA, ATR proxy, std, etc.
-    ├── volatility.py     # true range, ATR, MAD, classification
-    ├── smoothing.py      # low-pass filters and denoising
-    ├── synthetic.py      # random price series generators
-    ├── normalize.py      # volatility normalization
-    └── features.py       # feature builder
-tests/
-    └── ...               # unit tests
+    ├── core.py           # log returns and basic transforms
+    ├── rolling.py        # moving averages and volatility metrics
+    ├── volatility.py     # ATR, MAD and related indicators
+    ├── smoothing.py      # denoising utilities
+    ├── synthetic.py      # price series generators
+    ├── normalize.py      # feature normalization helpers
+    ├── features.py       # convenience feature builder
+    └── cli.py            # command line interface
 ```
 
-See the `notebooks/` directory for an interactive example.
-Further planned work is described in [ROADMAP.md](ROADMAP.md).
+The package also includes a small SPY price snippet for demos:
+
+```python
+from volnorm import load_spy_sample
+spy = load_spy_sample()
+```
+
+## Contributing
+
+Issues and pull requests are welcome. For questions, contact **Diogo Ribeiro** (<diogo.debastos.ribeiro@gmail.com> or <dfr@esmad.ipp.pt>).
+
+Maintainer: [DiogoRibeiro7](https://github.com/DiogoRibeiro7) – ESMAD, Instituto Politécnico do Porto. ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072).
+
+Further plans are detailed in [ROADMAP.md](ROADMAP.md).

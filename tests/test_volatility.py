@@ -7,7 +7,13 @@ from volnorm.volatility import (
     compute_bollinger_bands,
     compute_keltner_channels,
     compute_donchian_channels,
+    compute_realized_volatility,
+    compute_garch_forecast,
+    compute_implied_volatility,
+    compute_regime_probabilities,
 )
+import numpy as np
+import math
 
 
 def test_true_range():
@@ -64,3 +70,68 @@ def test_donchian_channels():
     assert channels.columns.tolist() == ["middle", "upper", "lower"]
     assert channels["upper"].iloc[3] == 14
     assert channels["lower"].iloc[3] == 10
+
+
+def test_realized_volatility():
+    idx = pd.DatetimeIndex(
+        [
+            "2024-01-01 09:30",
+            "2024-01-01 09:31",
+            "2024-01-01 09:32",
+            "2024-01-02 09:30",
+            "2024-01-02 09:31",
+            "2024-01-02 09:32",
+        ]
+    )
+    prices = pd.Series([100, 101, 102, 103, 104, 105], index=idx)
+
+    result = compute_realized_volatility(prices)
+
+    log_returns = (prices / prices.shift(1)).apply(np.log).dropna()
+    expected = log_returns.pow(2).resample("D").sum().pow(0.5)
+
+    pd.testing.assert_series_equal(result, expected)
+
+
+def test_garch_forecast():
+    returns = pd.Series([0.01, -0.02, 0.015, -0.005])
+    forecast = compute_garch_forecast(returns, horizon=2)
+    assert len(forecast) == 2
+    assert forecast.index.tolist() == [1, 2]
+    assert (forecast > 0).all()
+
+
+def test_implied_volatility():
+    spot = 100.0
+    strike = 105.0
+    time = 0.5
+    rate = 0.01
+    true_vol = 0.2
+
+    # Black-Scholes formula for a call option
+    d1 = (np.log(spot / strike) + (rate + 0.5 * true_vol**2) * time) / (
+        true_vol * np.sqrt(time)
+    )
+    d2 = d1 - true_vol * np.sqrt(time)
+
+    def cdf(x: float) -> float:
+        return 0.5 * (1 + math.erf(x / np.sqrt(2)))
+
+    price = spot * cdf(d1) - strike * np.exp(-rate * time) * cdf(d2)
+
+    est = compute_implied_volatility(
+        price, spot, strike, time, rate, option_type="call"
+    )
+    assert abs(est - true_vol) < 1e-4
+
+
+def test_regime_probabilities_identify_high_low():
+    np.random.seed(0)
+    low = np.random.normal(0, 0.01, size=30)
+    high = np.random.normal(0, 0.05, size=30)
+    returns = pd.Series(np.concatenate([low, high, low]))
+
+    probs = compute_regime_probabilities(returns, n_iter=5)
+
+    assert probs.loc[:29, "low"].mean() > 0.5
+    assert probs.loc[30:59, "high"].mean() > 0.5
