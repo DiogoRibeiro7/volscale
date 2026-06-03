@@ -56,3 +56,12 @@ def test_cli_supports_feature_selection_and_volatility(tmp_path, capsys):
     assert "log_return_norm_2" in out
     assert "atr_proxy_2_norm" in out
     assert "rolling_vol_2" in out
+
+
+def test_cli_rejects_unknown_feature_name(tmp_path):
+    df = pd.DataFrame({"close": [100, 101, 102, 103]})
+    csv = tmp_path / "prices.csv"
+    df.to_csv(csv, index=False)
+
+    with pytest.raises(SystemExit, match="unknown feature names"):
+        main([str(csv), "--window", "2", "--features", "banana"])

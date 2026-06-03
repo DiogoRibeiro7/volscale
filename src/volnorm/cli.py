@@ -1,6 +1,6 @@
 import argparse
 import pandas as pd
-from .features import build_normalized_features
+from .features import FeatureConfig, build_normalized_features
 
 
 def _parse_args(args=None) -> argparse.Namespace:
@@ -60,11 +60,14 @@ def main(argv=None) -> None:
         ]
 
     try:
-        features = build_normalized_features(
-            df[args.column],
+        config = FeatureConfig.from_inputs(
             window=args.window,
             include=include,
             append_volatility=args.include_volatility,
+        )
+        features = build_normalized_features(
+            df[args.column],
+            config=config,
         )
     except (TypeError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc

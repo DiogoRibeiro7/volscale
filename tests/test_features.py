@@ -4,6 +4,7 @@ import pytest
 from volnorm.features import (
     DEFAULT_FEATURES,
     SUPPORTED_FEATURES,
+    FeatureConfig,
     build_normalized_features,
 )
 
@@ -27,6 +28,13 @@ def test_feature_defaults_are_supported():
     assert set(DEFAULT_FEATURES) == SUPPORTED_FEATURES
 
 
+def test_feature_config_defaults_are_valid():
+    config = FeatureConfig(window=10)
+    assert config.window == 10
+    assert config.include == DEFAULT_FEATURES
+    assert config.append_volatility is False
+
+
 def test_build_normalized_features_rejects_bad_window():
     prices = pd.Series([100.0, 101.0, 102.0])
     with pytest.raises(ValueError, match="positive integer"):
@@ -41,12 +49,12 @@ def test_build_normalized_features_rejects_non_positive_prices():
 
 def test_build_normalized_features_supports_feature_selection_and_volatility():
     prices = pd.Series([100.0, 101.0, 103.0, 104.0, 105.0])
-    df = build_normalized_features(
-        prices,
+    config = FeatureConfig(
         window=2,
-        include=["log_return", "price_minus_sma"],
+        include=("log_return", "price_minus_sma"),
         append_volatility=True,
     )
+    df = build_normalized_features(prices, config=config)
     assert df.columns.tolist() == [
         "log_return_norm_2",
         "price_minus_sma_2_norm",
@@ -58,3 +66,15 @@ def test_build_normalized_features_rejects_unknown_features():
     prices = pd.Series([100.0, 101.0, 103.0, 104.0])
     with pytest.raises(ValueError, match="unknown feature names"):
         build_normalized_features(prices, window=2, include=["banana"])
+
+
+def test_feature_config_rejects_unknown_features():
+    with pytest.raises(ValueError, match="unknown feature names"):
+        FeatureConfig(window=2, include=("banana",))
+
+
+def test_build_normalized_features_rejects_mixed_config_and_kwargs():
+    prices = pd.Series([100.0, 101.0, 103.0, 104.0])
+    config = FeatureConfig(window=2)
+    with pytest.raises(ValueError, match="cannot be combined"):
+        build_normalized_features(prices, window=2, config=config)

@@ -22,14 +22,17 @@ Use the library directly in Python:
 
 ```python
 import pandas as pd
-from volnorm import build_normalized_features
+from volnorm import FeatureConfig, build_normalized_features
 
 prices = pd.Series([100, 101, 102, 103, 104])
+config = FeatureConfig(
+    window=3,
+    include=("price_minus_sma", "log_return"),
+    append_volatility=True,
+)
 features = build_normalized_features(
     prices,
-    window=3,
-    include=["price_minus_sma", "log_return"],
-    append_volatility=True,
+    config=config,
 )
 print(features.dropna())
 ```

@@ -42,6 +42,7 @@ This repository is focused on a small Python package for exploratory volatility 
 - [x] Split experimental helpers behind a dedicated module
 - [x] Move exploratory implementations into a dedicated package subtree
 - [x] Run tests, lint, format checks, and type checks in CI
+- [x] Introduce typed configuration for the core feature pipeline
 - [ ] Publish to PyPI (optional)
 
 ---
