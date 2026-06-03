@@ -3,6 +3,10 @@ import math
 import numpy as np
 import pandas as pd
 import pytest
+from tests.benchmark_fixtures import (
+    BLACK_SCHOLES_BENCHMARKS,
+    REALIZED_VOLATILITY_BENCHMARK,
+)
 
 from volnorm.experimental.volatility import (
     compute_garch_forecast,
@@ -33,15 +37,6 @@ def test_realized_volatility():
 
 
 def test_realized_volatility_matches_manual_daily_benchmark():
-    idx = pd.DatetimeIndex(
-        [
-            "2024-01-01 09:30",
-            "2024-01-01 09:31",
-            "2024-01-01 09:32",
-            "2024-01-02 09:30",
-            "2024-01-02 09:31",
-        ]
-    )
     prices = pd.Series(
         [
             100.0,
@@ -50,14 +45,12 @@ def test_realized_volatility_matches_manual_daily_benchmark():
             100.0 * math.exp(0.1 + 0.2 + 0.3),
             100.0 * math.exp(0.1 + 0.2 + 0.3 + 0.4),
         ],
-        index=idx,
+        index=REALIZED_VOLATILITY_BENCHMARK["index"],
     )
     result = compute_realized_volatility(prices)
-    expected = pd.Series(
-        [math.sqrt(0.1**2 + 0.2**2), math.sqrt(0.3**2 + 0.4**2)],
-        index=pd.date_range("2024-01-01", periods=2, freq="D"),
+    pd.testing.assert_series_equal(
+        result, REALIZED_VOLATILITY_BENCHMARK["expected_daily"]
     )
-    pd.testing.assert_series_equal(result, expected)
 
 
 def test_realized_volatility_requires_datetime_index():
@@ -96,38 +89,17 @@ def test_garch_forecast_rejects_unstable_parameters():
         compute_garch_forecast(returns, alpha=0.4, beta=0.7)
 
 
-def test_implied_volatility():
-    spot = 100.0
-    strike = 105.0
-    time = 0.5
-    rate = 0.01
-    true_vol = 0.2
-
-    d1 = (np.log(spot / strike) + (rate + 0.5 * true_vol**2) * time) / (
-        true_vol * np.sqrt(time)
-    )
-    d2 = d1 - true_vol * np.sqrt(time)
-
-    def cdf(x: float) -> float:
-        return 0.5 * (1 + math.erf(x / np.sqrt(2)))
-
-    price = spot * cdf(d1) - strike * np.exp(-rate * time) * cdf(d2)
+@pytest.mark.parametrize("case", BLACK_SCHOLES_BENCHMARKS)
+def test_implied_volatility_matches_reference_benchmarks(case):
     est = compute_implied_volatility(
-        price, spot, strike, time, rate, option_type="call"
+        price=case["price"],
+        spot=case["spot"],
+        strike=case["strike"],
+        time=case["time"],
+        rate=case["rate"],
+        option_type=case["option_type"],
     )
-    assert abs(est - true_vol) < 1e-4
-
-
-def test_implied_volatility_matches_known_black_scholes_benchmark():
-    est = compute_implied_volatility(
-        price=10.4506,
-        spot=100.0,
-        strike=100.0,
-        time=1.0,
-        rate=0.05,
-        option_type="call",
-    )
-    assert abs(est - 0.2) < 1e-4
+    assert abs(est - case["volatility"]) < 1e-4
 
 
 def test_implied_volatility_rejects_arbitrage_violations():

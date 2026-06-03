@@ -52,7 +52,7 @@ This repository is focused on a small Python package for exploratory volatility 
 - [x] Add `pytest`-based test suite
 - [x] Include synthetic data generators for robustness testing
 - [x] Add edge-case coverage for invalid inputs and numerical failure modes
-- [ ] Validate against external reference implementations or published examples
+- [x] Validate key numerical helpers against fixed reference benchmarks
 
 ---
 
