@@ -40,6 +40,7 @@ This repository is focused on a small Python package for exploratory volatility 
 - [x] Make the test suite runnable from a clean checkout
 - [x] Add input validation across public APIs
 - [x] Split experimental helpers behind a dedicated module
+- [x] Move exploratory implementations into a dedicated package subtree
 - [x] Run tests, lint, format checks, and type checks in CI
 - [ ] Publish to PyPI (optional)
 

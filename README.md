@@ -43,7 +43,7 @@ print(features.dropna())
 - Bollinger, Keltner and Donchian channel helpers
 - Cross-sectional normalization across multiple assets
 
-Experimental helpers are also available under `volnorm.experimental`:
+Experimental helpers live under the `volnorm.experimental` package:
 
 - Realized volatility from intraday data
 - Simple fixed-parameter GARCH-style forecasts
@@ -63,12 +63,10 @@ src/
 └── volnorm/
     ├── core.py           # log returns and basic transforms
     ├── rolling.py        # moving averages and volatility metrics
-    ├── volatility.py     # ATR, MAD and related indicators
-    ├── smoothing.py      # denoising utilities
-    ├── synthetic.py      # price series generators
+    ├── volatility.py     # stable ATR, MAD and channel indicators
     ├── normalize.py      # feature normalization helpers
     ├── features.py       # convenience feature builder
-    ├── experimental.py   # exploratory and less-stable helpers
+    ├── experimental/     # exploratory helpers and toy model routines
     └── cli.py            # command line interface
 ```
 

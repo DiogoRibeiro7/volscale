@@ -3,6 +3,7 @@ import warnings
 import pandas as pd
 
 from volnorm import experimental
+from volnorm.experimental._warning import WARNING_MESSAGE
 
 
 def test_experimental_helpers_emit_warning():
@@ -20,4 +21,4 @@ def test_experimental_helpers_emit_warning():
         experimental.compute_realized_volatility(prices)
 
     assert caught
-    assert "exploratory helpers" in str(caught[0].message)
+    assert WARNING_MESSAGE in str(caught[0].message)
