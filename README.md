@@ -1,6 +1,6 @@
 # VolNorm
 
-VolNorm provides utilities for volatility-normalized feature engineering in financial time series. The library exposes rolling statistics, normalization helpers and a command line interface for quickly generating features from CSV data.
+VolNorm provides a compact set of utilities for exploratory volatility-scaled feature engineering in financial time series. The library focuses on rolling statistics, normalization helpers, and a small command line interface for generating features from CSV data.
 
 ## Installation
 
@@ -35,16 +35,18 @@ print(features.dropna())
 - ATR proxies and true range calculations
 - Volatility normalization of indicators
 - Rolling statistics including SMA, EMA and WMA
-- Realized volatility computed from intraday data
-- GARCH-based volatility forecasts
-- Implied volatility extraction from options prices
 - Bollinger, Keltner and Donchian channel helpers
-- Low-pass filtering and basic synthetic data generation
 - Cross-sectional normalization across multiple assets
-- Regime-switching models for volatility regimes
-- Event-driven features for scheduled announcements
 
-See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a complete example.
+Experimental helpers are also available under `volnorm.experimental`:
+
+- Realized volatility from intraday data
+- Simple fixed-parameter GARCH-style forecasts
+- Black-Scholes implied volatility solving
+- Two-state regime probability estimation
+- Low-pass filtering, synthetic price generation, and event-window flags
+
+See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a simple walkthrough.
 
 ## Project layout
 
@@ -58,6 +60,7 @@ src/
     ├── synthetic.py      # price series generators
     ├── normalize.py      # feature normalization helpers
     ├── features.py       # convenience feature builder
+    ├── experimental.py   # exploratory and less-stable helpers
     └── cli.py            # command line interface
 ```
 

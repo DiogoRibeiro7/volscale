@@ -1,10 +1,10 @@
-# 📈 ROADMAP – Volatility Normalization Tools
+# ROADMAP - Volatility Normalization Tools
 
-This repository is dedicated to building a pure Python toolkit for volatility normalization and feature engineering in financial time series. The goal is to offer clean, robust, and reusable utilities that improve modeling stability and performance—without relying on third-party finance libraries.
+This repository is focused on a small Python package for exploratory volatility normalization and feature engineering in financial time series. The goal is to keep the core utilities clean, validated, and reusable while clearly separating more experimental helpers from the stable API surface.
 
 ---
 
-## ✅ Phase 1: Core Features (MVP)
+## Phase 1: Core Features
 
 - [x] Compute log returns
 - [x] Rolling standard deviation as volatility
@@ -17,7 +17,7 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 
 ---
 
-## 🚧 Phase 2: Feature Expansion
+## Phase 2: Feature Expansion
 
 - [x] Rolling metrics: EMA, max, min, z-score
 - [x] Weighted Moving Average
@@ -31,52 +31,46 @@ This repository is dedicated to building a pure Python toolkit for volatility no
 
 ---
 
-## 🚀 Phase 3: Package Readiness
+## Phase 3: Package Readiness
 
 - [x] Create `pyproject.toml` with Poetry or setuptools
-- [x] Organize modules into `core/`, `features/`, `transforms/`
+- [x] Organize code into focused modules
 - [x] Add CLI entry point for feature generation from CSV
 - [x] Add examples in Jupyter notebooks
+- [x] Make the test suite runnable from a clean checkout
+- [x] Add input validation across public APIs
+- [x] Split experimental helpers behind a dedicated module
 - [ ] Publish to PyPI (optional)
 
 ---
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 - [x] Add `pytest`-based test suite
 - [x] Include synthetic data generators for robustness testing
-- [x] Validate against known data (e.g., SPY, AAPL)
+- [x] Add edge-case coverage for invalid inputs and numerical failure modes
+- [ ] Validate against external reference implementations or published examples
 
 ---
 
-## 💡 Name Suggestions
+## Name
 
-The current shortlist for the repository name includes:
-
-- `volnorm` – Volatility normalization, short and to the point  
-- `voltools` – Toolbox for volatility-based transformations  
-- `featvol` – Feature engineering through volatility  
-- `volnify` – Normalize using volatility (catchy)  
-- `bounded-features` – Emphasizes feature stabilization  
-- `voltkit` – A volatility feature engineering kit  
-- `volsignal` – Turning volatility into signal  
-
-**Recommended:** `volnorm` for clarity and naming consistency.
+The repository name is `volnorm`.
 
 ---
 
-## ✨ Vision
+## Vision
 
-To offer a lightweight, dependency-free package that helps researchers, quants, and data scientists make their features bounded, stable, and more model-friendly—especially when working with volatile financial data.
+To offer a lightweight package for exploratory feature work on volatile financial data, with clear boundaries between stable utilities and experimental routines.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 The project welcomes community involvement. If you have ideas for new features or improvements, open an issue or send a pull request. For questions, reach out to **Diogo Ribeiro** (`DiogoRibeiro7`) at
 <diogo.debastos.ribeiro@gmail.com> (personal) or <dfr@esmad.ipp.pt> (professional).
 
-## 📫 Maintainer
+## Maintainer
 
 **Diogo Ribeiro** – ESMAD, Instituto Politécnico do Porto  
 GitHub: [`DiogoRibeiro7`](https://github.com/DiogoRibeiro7)  
@@ -86,16 +80,16 @@ ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072)
 
 ---
 
-## 🔮 Future Directions
+## Future Directions
 
 Further ideas to extend volatility normalization:
 
-- Realized volatility from intraday data *(implemented)*
-- GARCH-based volatility estimates for forecasting *(implemented)*
-- Integration of implied volatility from options data *(implemented)*
+- Better reference validation for realized volatility
+- Parameter estimation for GARCH-style models instead of fixed coefficients
+- Safer solvers and stronger diagnostics for implied volatility
 - Cross-sectional normalization across multiple assets *(implemented)*
-- Regime-switching models for volatility regimes *(implemented)*
-- Event-driven features reacting to scheduled announcements *(implemented)*
+- More robust regime models with convergence reporting
+- Event-window helpers based on trading calendars
 - Incremental computations for streaming data
 - Visualization helpers for normalized indicators
 

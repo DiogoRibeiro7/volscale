@@ -19,16 +19,35 @@ def _parse_args(args=None) -> argparse.Namespace:
     parser.add_argument(
         "--output", help="Optional output CSV path. Prints to stdout if omitted"
     )
+    parser.add_argument(
+        "--date-column",
+        help="Optional date column to parse and set as the index",
+    )
     return parser.parse_args(args)
 
 
 def main(argv=None) -> None:
     args = _parse_args(argv)
-    df = pd.read_csv(args.input_csv)
+    try:
+        df = pd.read_csv(args.input_csv)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from exc
+
+    if args.date_column:
+        if args.date_column not in df.columns:
+            raise SystemExit(
+                f"Date column '{args.date_column}' not found in {args.input_csv}"
+            )
+        df[args.date_column] = pd.to_datetime(df[args.date_column], errors="raise")
+        df = df.set_index(args.date_column)
+
     if args.column not in df.columns:
         raise SystemExit(f"Column '{args.column}' not found in {args.input_csv}")
 
-    features = build_normalized_features(df[args.column], window=args.window)
+    try:
+        features = build_normalized_features(df[args.column], window=args.window)
+    except (TypeError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
 
     if args.output:
         features.to_csv(args.output, index=False)

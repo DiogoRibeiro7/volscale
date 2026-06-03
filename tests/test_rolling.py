@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pytest
 from volnorm.rolling import (
     compute_rolling_std,
     compute_sma,
@@ -93,3 +94,21 @@ def test_wma():
         raw=True,
     )
     pd.testing.assert_series_equal(result, expected)
+
+
+@pytest.mark.parametrize(
+    ("func", "kwargs"),
+    [
+        (compute_rolling_std, {"values": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_sma, {"prices": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_atr_proxy, {"prices": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_ema, {"prices": pd.Series([1, 2, 3]), "span": 0}),
+        (compute_rolling_max, {"values": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_rolling_min, {"values": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_zscore, {"values": pd.Series([1, 2, 3]), "window": 0}),
+        (compute_wma, {"values": pd.Series([1, 2, 3]), "window": 0}),
+    ],
+)
+def test_rolling_functions_reject_non_positive_windows(func, kwargs):
+    with pytest.raises(ValueError, match="positive integer"):
+        func(**kwargs)

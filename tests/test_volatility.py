@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 from volnorm.volatility import (
     compute_true_range,
     compute_atr,
@@ -34,6 +35,14 @@ def test_atr_ema():
     pd.testing.assert_series_equal(result, expected)
 
 
+def test_atr_rejects_unknown_method():
+    high = pd.Series([10, 11, 12])
+    low = pd.Series([9, 10, 11])
+    close = pd.Series([9.5, 10.5, 11.5])
+    with pytest.raises(ValueError, match="method"):
+        compute_atr(high, low, close, window=2, method="wild")
+
+
 def test_mad_constant():
     s = pd.Series([1, 1, 1, 1])
     result = compute_mad(s, window=2)
@@ -45,6 +54,12 @@ def test_classify_volatility():
     vol = pd.Series([0.1, 0.2, 0.3, 0.4])
     labels = classify_volatility(vol, low_quantile=0.25, high_quantile=0.75)
     assert set(labels.unique()) == {"low", "medium", "high"}
+
+
+def test_classify_volatility_rejects_bad_quantiles():
+    vol = pd.Series([0.1, 0.2, 0.3])
+    with pytest.raises(ValueError, match="smaller"):
+        classify_volatility(vol, low_quantile=0.8, high_quantile=0.2)
 
 
 def test_bollinger_bands():
@@ -93,12 +108,24 @@ def test_realized_volatility():
     pd.testing.assert_series_equal(result, expected)
 
 
+def test_realized_volatility_requires_datetime_index():
+    prices = pd.Series([100, 101, 102])
+    with pytest.raises(TypeError, match="DatetimeIndex"):
+        compute_realized_volatility(prices)
+
+
 def test_garch_forecast():
     returns = pd.Series([0.01, -0.02, 0.015, -0.005])
     forecast = compute_garch_forecast(returns, horizon=2)
     assert len(forecast) == 2
     assert forecast.index.tolist() == [1, 2]
     assert (forecast > 0).all()
+
+
+def test_garch_forecast_rejects_unstable_parameters():
+    returns = pd.Series([0.01, -0.02, 0.015, -0.005])
+    with pytest.raises(ValueError, match="less than 1"):
+        compute_garch_forecast(returns, alpha=0.4, beta=0.7)
 
 
 def test_implied_volatility():
@@ -125,6 +152,17 @@ def test_implied_volatility():
     assert abs(est - true_vol) < 1e-4
 
 
+def test_implied_volatility_rejects_arbitrage_violations():
+    with pytest.raises(ValueError, match="no-arbitrage"):
+        compute_implied_volatility(
+            price=200.0,
+            spot=100.0,
+            strike=105.0,
+            time=0.5,
+            rate=0.01,
+        )
+
+
 def test_regime_probabilities_identify_high_low():
     np.random.seed(0)
     low = np.random.normal(0, 0.01, size=30)
@@ -135,3 +173,9 @@ def test_regime_probabilities_identify_high_low():
 
     assert probs.loc[:29, "low"].mean() > 0.5
     assert probs.loc[30:59, "high"].mean() > 0.5
+
+
+def test_regime_probabilities_reject_constant_series():
+    returns = pd.Series([0.0] * 10)
+    with pytest.raises(ValueError, match="positive variance"):
+        compute_regime_probabilities(returns)

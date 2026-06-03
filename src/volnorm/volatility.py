@@ -1,11 +1,20 @@
 import math
 import numpy as np
 import pandas as pd
+from ._validation import (
+    validate_finite_positive,
+    validate_positive_int,
+    validate_series,
+    validate_strictly_positive_series,
+)
 from .rolling import compute_sma, compute_rolling_std
 
 
 def compute_true_range(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
     """Return the True Range for each period."""
+    high = validate_series(high, "high")
+    low = validate_series(low, "low")
+    close = validate_series(close, "close")
     prev_close = close.shift(1)
     tr_components = pd.concat(
         [high - low, (high - prev_close).abs(), (low - prev_close).abs()],
@@ -23,14 +32,19 @@ def compute_atr(
     method: str = "ema",
 ) -> pd.Series:
     """Average True Range calculated via EMA or SMA."""
+    validate_positive_int(window, "window")
     tr = compute_true_range(high, low, close)
     if method == "ema":
         return tr.ewm(span=window, adjust=False).mean()
-    return tr.rolling(window=window, min_periods=window).mean()
+    if method == "sma":
+        return tr.rolling(window=window, min_periods=window).mean()
+    raise ValueError("method must be either 'ema' or 'sma'")
 
 
 def compute_mad(values: pd.Series, window: int) -> pd.Series:
     """Rolling Median Absolute Deviation."""
+    values = validate_series(values, "values")
+    validate_positive_int(window, "window")
     return values.rolling(window=window, min_periods=window).apply(
         lambda x: np.median(np.abs(x - np.median(x)))
     )
@@ -42,6 +56,11 @@ def classify_volatility(
     high_quantile: float = 0.75,
 ) -> pd.Series:
     """Classify volatility levels using quantile thresholds."""
+    volatility = validate_series(volatility, "volatility")
+    if not 0 <= low_quantile <= 1 or not 0 <= high_quantile <= 1:
+        raise ValueError("quantiles must be between 0 and 1")
+    if low_quantile >= high_quantile:
+        raise ValueError("low_quantile must be smaller than high_quantile")
     low_thresh = volatility.quantile(low_quantile)
     high_thresh = volatility.quantile(high_quantile)
 
@@ -61,6 +80,7 @@ def compute_bollinger_bands(
     prices: pd.Series, window: int, *, num_std: float = 2.0
 ) -> pd.DataFrame:
     """Return Bollinger Bands as a DataFrame."""
+    validate_finite_positive(num_std, "num_std", allow_zero=True)
     sma = compute_sma(prices, window)
     std = compute_rolling_std(prices, window)
     upper = sma + num_std * std
@@ -77,6 +97,7 @@ def compute_keltner_channels(
     atr_multiplier: float = 2.0,
 ) -> pd.DataFrame:
     """Return Keltner Channels using EMA and ATR."""
+    validate_finite_positive(atr_multiplier, "atr_multiplier", allow_zero=True)
     ema = close.ewm(span=window, adjust=False).mean()
     atr = compute_atr(high, low, close, window)
     upper = ema + atr_multiplier * atr
@@ -88,6 +109,9 @@ def compute_donchian_channels(
     high: pd.Series, low: pd.Series, window: int
 ) -> pd.DataFrame:
     """Return Donchian Channels using rolling extremes."""
+    high = validate_series(high, "high")
+    low = validate_series(low, "low")
+    validate_positive_int(window, "window")
     upper = high.rolling(window=window, min_periods=window).max()
     lower = low.rolling(window=window, min_periods=window).min()
     middle = (upper + lower) / 2
@@ -104,7 +128,9 @@ def compute_realized_volatility(prices: pd.Series, *, freq: str = "D") -> pd.Ser
     Returns:
         Realized volatility aggregated at the specified frequency.
     """
-
+    prices = validate_strictly_positive_series(prices, "prices")
+    if not isinstance(prices.index, pd.DatetimeIndex):
+        raise TypeError("prices index must be a pandas DatetimeIndex")
     # Compute log returns and drop the initial NaN introduced by the shift. Using
     # ``apply`` keeps the pandas ``Series`` type so static type checkers do not
     # infer an ``ndarray`` from ``numpy`` operations.
@@ -147,8 +173,17 @@ def compute_garch_forecast(
     returns = returns.dropna().astype(float)
     if returns.empty:
         raise ValueError("returns series is empty")
+    validate_positive_int(horizon, "horizon")
+    if omega < 0:
+        raise ValueError("omega must be non-negative")
+    if alpha < 0 or beta < 0:
+        raise ValueError("alpha and beta must be non-negative")
+    if alpha + beta >= 1:
+        raise ValueError("alpha + beta must be less than 1 for a stable forecast")
 
     variance = float(returns.var())  # type: ignore[arg-type]
+    if not math.isfinite(variance) or variance <= 0:
+        raise ValueError("returns must have positive variance")
     prev_ret = float(returns.iloc[0])  # type: ignore[arg-type]
     for r in returns.iloc[1:]:
         variance = omega + alpha * prev_ret**2 + beta * variance
@@ -195,9 +230,27 @@ def compute_implied_volatility(
         ValueError: If ``option_type`` is not ``"call"`` or ``"put"``.
         RuntimeError: If the method fails to converge within ``max_iter`` steps.
     """
-
+    validate_finite_positive(price, "price", allow_zero=True)
+    validate_finite_positive(spot, "spot")
+    validate_finite_positive(strike, "strike")
+    validate_finite_positive(time, "time")
+    if rate < -1:
+        raise ValueError("rate is unrealistically low")
+    validate_finite_positive(initial_vol, "initial_vol")
+    validate_finite_positive(tol, "tol")
+    validate_positive_int(max_iter, "max_iter")
     if option_type not in {"call", "put"}:
         raise ValueError("option_type must be 'call' or 'put'")
+
+    discount = math.exp(-rate * time)
+    if option_type == "call":
+        lower_bound = max(0.0, spot - strike * discount)
+        upper_bound = spot
+    else:
+        lower_bound = max(0.0, strike * discount - spot)
+        upper_bound = strike * discount
+    if not (lower_bound <= price <= upper_bound):
+        raise ValueError("price violates no-arbitrage bounds for the option inputs")
 
     def norm_cdf(x: float) -> float:
         return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
@@ -205,8 +258,7 @@ def compute_implied_volatility(
     def norm_pdf(x: float) -> float:
         return math.exp(-0.5 * x * x) / math.sqrt(2.0 * math.pi)
 
-    volatility = initial_vol
-    for _ in range(max_iter):
+    def black_scholes(volatility: float) -> tuple[float, float]:
         d1 = (math.log(spot / strike) + (rate + 0.5 * volatility**2) * time) / (
             volatility * math.sqrt(time)
         )
@@ -222,12 +274,39 @@ def compute_implied_volatility(
             ) - spot * norm_cdf(-d1)
 
         vega = spot * math.sqrt(time) * norm_pdf(d1)
+        return model_price, vega
+
+    low_vol = 1e-9
+    high_vol = max(initial_vol, 1.0)
+    high_price, _ = black_scholes(high_vol)
+    while high_price < price and high_vol < 10.0:
+        high_vol *= 2.0
+        high_price, _ = black_scholes(high_vol)
+    if high_price < price:
+        raise RuntimeError("failed to bracket implied volatility")
+
+    volatility = min(max(initial_vol, low_vol), high_vol)
+    for _ in range(max_iter):
+        model_price, vega = black_scholes(volatility)
 
         diff = model_price - price
         if abs(diff) < tol:
             return volatility
 
-        volatility -= diff / vega
+        if vega > 1e-8:
+            candidate = volatility - diff / vega
+            if low_vol < candidate < high_vol:
+                volatility = candidate
+            else:
+                volatility = 0.5 * (low_vol + high_vol)
+        else:
+            volatility = 0.5 * (low_vol + high_vol)
+
+        model_price, _ = black_scholes(volatility)
+        if model_price > price:
+            high_vol = volatility
+        else:
+            low_vol = volatility
 
     raise RuntimeError("implied volatility did not converge")
 
@@ -251,7 +330,7 @@ def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.Dat
     Raises:
         ValueError: If ``returns`` is empty.
     """
-
+    validate_positive_int(n_iter, "n_iter")
     returns = returns.dropna().astype(float)
     if returns.empty:
         raise ValueError("returns series is empty")
@@ -263,10 +342,15 @@ def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.Dat
         a_max = np.max(a)
         return a_max + np.log(np.exp(a - a_max).sum())
 
-    sigma_low = float(np.std(r)) * 0.5
-    sigma_high = float(np.std(r)) * 2.0
+    base_sigma = float(np.std(r))
+    if not math.isfinite(base_sigma) or base_sigma <= 0:
+        raise ValueError("returns must have positive variance")
+    eps = 1e-8
+    sigma_low = max(base_sigma * 0.5, eps)
+    sigma_high = max(base_sigma * 2.0, eps)
     trans = np.array([[0.95, 0.05], [0.05, 0.95]], dtype=float)
     pi = np.array([0.5, 0.5], dtype=float)
+    prev_log_likelihood = -np.inf
 
     for _ in range(n_iter):
         log_lik = np.vstack(
@@ -294,6 +378,10 @@ def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.Dat
         log_gamma = log_alpha + log_beta
         norm = np.apply_along_axis(logsumexp, 1, log_gamma)
         gamma = np.exp(log_gamma - norm[:, None])
+        log_likelihood = float(norm.sum())
+        if log_likelihood < prev_log_likelihood - 1e-6:
+            raise RuntimeError("regime estimation became numerically unstable")
+        prev_log_likelihood = log_likelihood
 
         log_xi = np.zeros((n - 1, 2, 2))
         for t in range(n - 1):
@@ -309,8 +397,10 @@ def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.Dat
         xi = np.exp(log_xi)
 
         pi = gamma[0]
-        trans = xi.sum(axis=0) / gamma[:-1].sum(axis=0)[:, None]
-        sigma_low = math.sqrt((gamma[:, 0] * r**2).sum() / gamma[:, 0].sum())
-        sigma_high = math.sqrt((gamma[:, 1] * r**2).sum() / gamma[:, 1].sum())
+        trans_den = np.maximum(gamma[:-1].sum(axis=0)[:, None], eps)
+        trans = np.clip(xi.sum(axis=0) / trans_den, eps, 1.0)
+        trans = trans / trans.sum(axis=1, keepdims=True)
+        sigma_low = max(math.sqrt((gamma[:, 0] * r**2).sum() / max(gamma[:, 0].sum(), eps)), eps)
+        sigma_high = max(math.sqrt((gamma[:, 1] * r**2).sum() / max(gamma[:, 1].sum(), eps)), eps)
 
     return pd.DataFrame(gamma, index=returns.index, columns=["low", "high"])
