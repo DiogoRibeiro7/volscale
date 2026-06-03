@@ -400,7 +400,11 @@ def compute_regime_probabilities(returns: pd.Series, n_iter: int = 10) -> pd.Dat
         trans_den = np.maximum(gamma[:-1].sum(axis=0)[:, None], eps)
         trans = np.clip(xi.sum(axis=0) / trans_den, eps, 1.0)
         trans = trans / trans.sum(axis=1, keepdims=True)
-        sigma_low = max(math.sqrt((gamma[:, 0] * r**2).sum() / max(gamma[:, 0].sum(), eps)), eps)
-        sigma_high = max(math.sqrt((gamma[:, 1] * r**2).sum() / max(gamma[:, 1].sum(), eps)), eps)
+        sigma_low = max(
+            math.sqrt((gamma[:, 0] * r**2).sum() / max(gamma[:, 0].sum(), eps)), eps
+        )
+        sigma_high = max(
+            math.sqrt((gamma[:, 1] * r**2).sum() / max(gamma[:, 1].sum(), eps)), eps
+        )
 
     return pd.DataFrame(gamma, index=returns.index, columns=["low", "high"])

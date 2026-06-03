@@ -25,7 +25,12 @@ import pandas as pd
 from volnorm import build_normalized_features
 
 prices = pd.Series([100, 101, 102, 103, 104])
-features = build_normalized_features(prices, window=3)
+features = build_normalized_features(
+    prices,
+    window=3,
+    include=["price_minus_sma", "log_return"],
+    append_volatility=True,
+)
 print(features.dropna())
 ```
 
@@ -45,6 +50,9 @@ Experimental helpers are also available under `volnorm.experimental`:
 - Black-Scholes implied volatility solving
 - Two-state regime probability estimation
 - Low-pass filtering, synthetic price generation, and event-window flags
+
+These experimental helpers emit a runtime warning and should be treated as
+exploratory utilities rather than stable modeling components.
 
 See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a simple walkthrough.
 

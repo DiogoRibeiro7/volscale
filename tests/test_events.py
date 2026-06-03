@@ -14,7 +14,9 @@ def test_flag_event_window():
 def test_flag_event_window_supports_trading_days():
     idx = pd.bdate_range("2024-01-01", periods=5)
     events = pd.DatetimeIndex([idx[2]])
-    result = flag_event_window(idx, events, pre_event=1, post_event=1, use_trading_days=True)
+    result = flag_event_window(
+        idx, events, pre_event=1, post_event=1, use_trading_days=True
+    )
     expected = pd.Series([0.0, 1.0, 1.0, 1.0, 0.0], index=idx, dtype=float)
     pd.testing.assert_series_equal(result, expected)
 

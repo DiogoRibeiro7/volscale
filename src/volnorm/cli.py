@@ -20,6 +20,15 @@ def _parse_args(args=None) -> argparse.Namespace:
         "--output", help="Optional output CSV path. Prints to stdout if omitted"
     )
     parser.add_argument(
+        "--features",
+        help="Comma-separated feature names to include. Supported: price_minus_sma, atr_proxy, log_return",
+    )
+    parser.add_argument(
+        "--include-volatility",
+        action="store_true",
+        help="Append the rolling volatility column used for normalization",
+    )
+    parser.add_argument(
         "--date-column",
         help="Optional date column to parse and set as the index",
     )
@@ -44,8 +53,19 @@ def main(argv=None) -> None:
     if args.column not in df.columns:
         raise SystemExit(f"Column '{args.column}' not found in {args.input_csv}")
 
+    include = None
+    if args.features:
+        include = [
+            feature.strip() for feature in args.features.split(",") if feature.strip()
+        ]
+
     try:
-        features = build_normalized_features(df[args.column], window=args.window)
+        features = build_normalized_features(
+            df[args.column],
+            window=args.window,
+            include=include,
+            append_volatility=args.include_volatility,
+        )
     except (TypeError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
 

@@ -40,6 +40,7 @@ This repository is focused on a small Python package for exploratory volatility 
 - [x] Make the test suite runnable from a clean checkout
 - [x] Add input validation across public APIs
 - [x] Split experimental helpers behind a dedicated module
+- [x] Run tests, lint, format checks, and type checks in CI
 - [ ] Publish to PyPI (optional)
 
 ---
@@ -84,6 +85,7 @@ ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072)
 
 Further ideas to extend volatility normalization:
 
+- Better configuration objects for multi-feature pipelines
 - Better reference validation for realized volatility
 - Parameter estimation for GARCH-style models instead of fixed coefficients
 - Safer solvers and stronger diagnostics for implied volatility

@@ -108,6 +108,34 @@ def test_realized_volatility():
     pd.testing.assert_series_equal(result, expected)
 
 
+def test_realized_volatility_matches_manual_daily_benchmark():
+    idx = pd.DatetimeIndex(
+        [
+            "2024-01-01 09:30",
+            "2024-01-01 09:31",
+            "2024-01-01 09:32",
+            "2024-01-02 09:30",
+            "2024-01-02 09:31",
+        ]
+    )
+    prices = pd.Series(
+        [
+            100.0,
+            100.0 * math.exp(0.1),
+            100.0 * math.exp(0.1 + 0.2),
+            100.0 * math.exp(0.1 + 0.2 + 0.3),
+            100.0 * math.exp(0.1 + 0.2 + 0.3 + 0.4),
+        ],
+        index=idx,
+    )
+    result = compute_realized_volatility(prices)
+    expected = pd.Series(
+        [math.sqrt(0.1**2 + 0.2**2), math.sqrt(0.3**2 + 0.4**2)],
+        index=pd.date_range("2024-01-01", periods=2, freq="D"),
+    )
+    pd.testing.assert_series_equal(result, expected)
+
+
 def test_realized_volatility_requires_datetime_index():
     prices = pd.Series([100, 101, 102])
     with pytest.raises(TypeError, match="DatetimeIndex"):
@@ -120,6 +148,22 @@ def test_garch_forecast():
     assert len(forecast) == 2
     assert forecast.index.tolist() == [1, 2]
     assert (forecast > 0).all()
+
+
+def test_garch_forecast_long_horizon_reverts_toward_unconditional_volatility():
+    returns = pd.Series([0.01, -0.02, 0.015, -0.005, 0.012, -0.008])
+    omega = 1e-6
+    alpha = 0.05
+    beta = 0.9
+    forecast = compute_garch_forecast(
+        returns,
+        horizon=200,
+        omega=omega,
+        alpha=alpha,
+        beta=beta,
+    )
+    long_run_vol = math.sqrt(omega / (1 - alpha - beta))
+    assert abs(float(forecast.iloc[-1]) - long_run_vol) < 5e-4
 
 
 def test_garch_forecast_rejects_unstable_parameters():
@@ -150,6 +194,18 @@ def test_implied_volatility():
         price, spot, strike, time, rate, option_type="call"
     )
     assert abs(est - true_vol) < 1e-4
+
+
+def test_implied_volatility_matches_known_black_scholes_benchmark():
+    est = compute_implied_volatility(
+        price=10.4506,
+        spot=100.0,
+        strike=100.0,
+        time=1.0,
+        rate=0.05,
+        option_type="call",
+    )
+    assert abs(est - 0.2) < 1e-4
 
 
 def test_implied_volatility_rejects_arbitrage_violations():

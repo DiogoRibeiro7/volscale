@@ -28,7 +28,9 @@ def validate_strictly_positive_series(values: pd.Series, name: str) -> pd.Series
     return series
 
 
-def validate_finite_positive(value: float, name: str, *, allow_zero: bool = False) -> float:
+def validate_finite_positive(
+    value: float, name: str, *, allow_zero: bool = False
+) -> float:
     """Validate a scalar numeric input."""
     if not math.isfinite(value):
         raise ValueError(f"{name} must be finite")
