@@ -109,11 +109,11 @@ spy = load_spy_sample()
 
 ## Contributing
 
-Issues and pull requests are welcome. For questions, contact **Diogo Ribeiro** (<diogo.debastos.ribeiro@gmail.com> or <dfr@esmad.ipp.pt>).
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for development and verification guidance. For questions, contact **Diogo Ribeiro** (<diogo.debastos.ribeiro@gmail.com> or <dfr@esmad.ipp.pt>).
 
 Maintainer: [DiogoRibeiro7](https://github.com/DiogoRibeiro7) – ESMAD, Instituto Politécnico do Porto. ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072).
 
-Further plans are detailed in [ROADMAP.md](ROADMAP.md).
+Further plans are detailed in [ROADMAP.md](ROADMAP.md). Release history is tracked in [CHANGELOG.md](CHANGELOG.md).
 
 ## Release Process
 
