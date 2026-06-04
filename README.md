@@ -10,6 +10,15 @@ Install the project with [Poetry](https://python-poetry.org/):
 poetry install
 ```
 
+For local verification without Poetry-managed commands, the repository CI runs:
+
+```bash
+python -m black --check src tests
+python -m ruff check .
+python -m mypy .
+pytest -q
+```
+
 ## Quick start
 
 Generate normalized features from a CSV file with the CLI:
@@ -87,3 +96,15 @@ Issues and pull requests are welcome. For questions, contact **Diogo Ribeiro** (
 Maintainer: [DiogoRibeiro7](https://github.com/DiogoRibeiro7) – ESMAD, Instituto Politécnico do Porto. ORCID: [0009-0001-2022-7072](https://orcid.org/0009-0001-2022-7072).
 
 Further plans are detailed in [ROADMAP.md](ROADMAP.md).
+
+## Release Process
+
+Version releases are tag-driven and do not mutate the repository from CI.
+
+1. Update `tool.poetry.version` in `pyproject.toml`.
+2. Run the local verification commands.
+3. Commit the version bump.
+4. Create and push a tag in the form `vX.Y.Z`.
+5. The `Release` workflow verifies that the tag matches `pyproject.toml`, builds the wheel and sdist, and publishes them to PyPI.
+
+Publishing assumes PyPI trusted publishing is configured for this repository.
