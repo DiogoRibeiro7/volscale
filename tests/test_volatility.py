@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from tests.benchmark_fixtures import ATR_BENCHMARK
+from tests.benchmark_loader import load_atr_benchmark
 from volnorm.volatility import (
     compute_true_range,
     compute_atr,
@@ -13,28 +13,31 @@ from volnorm.volatility import (
 
 
 def test_true_range():
-    high = pd.Series(ATR_BENCHMARK["high"])
-    low = pd.Series(ATR_BENCHMARK["low"])
-    close = pd.Series(ATR_BENCHMARK["close"])
+    benchmark = load_atr_benchmark()
+    high = pd.Series(benchmark["high"])
+    low = pd.Series(benchmark["low"])
+    close = pd.Series(benchmark["close"])
     result = compute_true_range(high, low, close)
-    expected = pd.Series(ATR_BENCHMARK["true_range"])
+    expected = pd.Series(benchmark["true_range"])
     pd.testing.assert_series_equal(result, expected)
 
 
 def test_atr_ema():
-    high = pd.Series(ATR_BENCHMARK["high"])
-    low = pd.Series(ATR_BENCHMARK["low"])
-    close = pd.Series(ATR_BENCHMARK["close"])
-    expected = pd.Series(ATR_BENCHMARK["atr_ema_3"])
+    benchmark = load_atr_benchmark()
+    high = pd.Series(benchmark["high"])
+    low = pd.Series(benchmark["low"])
+    close = pd.Series(benchmark["close"])
+    expected = pd.Series(benchmark["atr_ema_3"])
     result = compute_atr(high, low, close, window=3, method="ema")
     pd.testing.assert_series_equal(result, expected)
 
 
 def test_atr_sma_matches_reference_fixture():
-    high = pd.Series(ATR_BENCHMARK["high"])
-    low = pd.Series(ATR_BENCHMARK["low"])
-    close = pd.Series(ATR_BENCHMARK["close"])
-    expected = pd.Series(ATR_BENCHMARK["atr_sma_3"])
+    benchmark = load_atr_benchmark()
+    high = pd.Series(benchmark["high"])
+    low = pd.Series(benchmark["low"])
+    close = pd.Series(benchmark["close"])
+    expected = pd.Series(benchmark["atr_sma_3"])
     result = compute_atr(high, low, close, window=3, method="sma")
     pd.testing.assert_series_equal(result, expected)
 

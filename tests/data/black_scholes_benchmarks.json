@@ -1,0 +1,32 @@
+{
+  "source": "Black-Scholes benchmark cases with analytically generated prices and known implied volatility.",
+  "cases": [
+    {
+      "option_type": "call",
+      "spot": 100.0,
+      "strike": 100.0,
+      "time": 1.0,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "price": 10.450583572185565
+    },
+    {
+      "option_type": "put",
+      "spot": 100.0,
+      "strike": 100.0,
+      "time": 1.0,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "price": 5.573526022256971
+    },
+    {
+      "option_type": "call",
+      "spot": 100.0,
+      "strike": 105.0,
+      "time": 0.5,
+      "rate": 0.01,
+      "volatility": 0.2,
+      "price": 3.7988068633033976
+    }
+  ]
+}

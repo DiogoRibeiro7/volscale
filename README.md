@@ -27,6 +27,20 @@ Generate normalized features from a CSV file with the CLI:
 poetry run volnorm prices.csv --column close --window 20 --output features.csv
 ```
 
+For indexed output, row filtering, and JSON export:
+
+```bash
+poetry run volnorm prices.csv \
+  --column close \
+  --window 20 \
+  --date-column date \
+  --keep-index \
+  --sort-index \
+  --dropna \
+  --output-format json \
+  --output features.json
+```
+
 Use the library directly in Python:
 
 ```python
@@ -65,6 +79,10 @@ Experimental helpers live under the `volnorm.experimental` package:
 
 These experimental helpers emit a runtime warning and should be treated as
 exploratory utilities rather than stable modeling components.
+
+Legacy imports such as `volnorm.events`, `volnorm.smoothing`, and
+`volnorm.synthetic` are compatibility wrappers only and emit deprecation
+warnings. Prefer the corresponding `volnorm.experimental.*` modules directly.
 
 See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a simple walkthrough.
 

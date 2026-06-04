@@ -3,9 +3,9 @@ import math
 import numpy as np
 import pandas as pd
 import pytest
-from tests.benchmark_fixtures import (
-    BLACK_SCHOLES_BENCHMARKS,
-    REALIZED_VOLATILITY_BENCHMARK,
+from tests.benchmark_loader import (
+    load_black_scholes_benchmarks,
+    load_realized_volatility_benchmark,
 )
 
 from volnorm.experimental.volatility import (
@@ -37,6 +37,7 @@ def test_realized_volatility():
 
 
 def test_realized_volatility_matches_manual_daily_benchmark():
+    benchmark = load_realized_volatility_benchmark()
     prices = pd.Series(
         [
             100.0,
@@ -45,12 +46,10 @@ def test_realized_volatility_matches_manual_daily_benchmark():
             100.0 * math.exp(0.1 + 0.2 + 0.3),
             100.0 * math.exp(0.1 + 0.2 + 0.3 + 0.4),
         ],
-        index=REALIZED_VOLATILITY_BENCHMARK["index"],
+        index=benchmark["index"],
     )
     result = compute_realized_volatility(prices)
-    pd.testing.assert_series_equal(
-        result, REALIZED_VOLATILITY_BENCHMARK["expected_daily"]
-    )
+    pd.testing.assert_series_equal(result, benchmark["expected_daily"])
 
 
 def test_realized_volatility_requires_datetime_index():
@@ -89,7 +88,7 @@ def test_garch_forecast_rejects_unstable_parameters():
         compute_garch_forecast(returns, alpha=0.4, beta=0.7)
 
 
-@pytest.mark.parametrize("case", BLACK_SCHOLES_BENCHMARKS)
+@pytest.mark.parametrize("case", load_black_scholes_benchmarks())
 def test_implied_volatility_matches_reference_benchmarks(case):
     est = compute_implied_volatility(
         price=case["price"],

@@ -1,0 +1,9 @@
+{
+  "source": "Manual three-period ATR reference case derived from fixed OHLC values used in the test suite.",
+  "high": [48.7, 48.72, 48.9],
+  "low": [47.79, 48.14, 48.39],
+  "close": [48.16, 48.61, 48.75],
+  "true_range": [0.91, 0.58, 0.51],
+  "atr_sma_3": [null, null, 0.6666666666666666],
+  "atr_ema_3": [0.91, 0.745, 0.6275]
+}
