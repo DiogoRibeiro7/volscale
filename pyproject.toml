@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volnorm"
-version = "0.1.0"
+version = "0.1.1"
 description = "Volatility-normalized feature engineering toolkit for financial time series"
 authors = ["Diogo Ribeiro <dfr@esmad.ipp.pt>"]
 packages = [{ include = "volnorm", from = "src" }]

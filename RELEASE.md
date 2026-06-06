@@ -24,8 +24,8 @@ pytest -q
 4. Create and push a tag in the form `vX.Y.Z`.
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
 5. The `Release` workflow verifies that the tag matches `pyproject.toml`, builds the source and wheel artifacts, uploads them to the workflow run, and publishes them to PyPI.

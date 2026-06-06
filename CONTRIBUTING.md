@@ -31,10 +31,10 @@ If you change packaging or release logic, also build artifacts locally:
 
 ```bash
 poetry build
-python scripts/check_version.py v0.1.0
+python scripts/check_version.py v0.1.1
 ```
 
-Replace `v0.1.0` with the version you are validating.
+Replace `v0.1.1` with the version you are validating.
 
 ## Coding Guidelines
 
