@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 import pytest
-from volnorm._warnings import LEGACY_WRAPPER_WARNING
-from volnorm.smoothing import low_pass_filter
+from volscale._warnings import LEGACY_WRAPPER_WARNING
+from volscale.smoothing import low_pass_filter
 
 
 def test_low_pass_filter_basic():

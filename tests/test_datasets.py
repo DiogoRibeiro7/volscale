@@ -1,4 +1,4 @@
-from volnorm.datasets import load_spy_sample
+from volscale.datasets import load_spy_sample
 
 
 def test_load_spy_sample():

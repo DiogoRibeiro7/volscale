@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "volnorm"
+name = "volscale"
 version = "0.1.1"
 description = "Volatility-normalized feature engineering toolkit for financial time series"
 authors = ["Diogo Ribeiro <dfr@esmad.ipp.pt>"]
-packages = [{ include = "volnorm", from = "src" }]
+packages = [{ include = "volscale", from = "src" }]
 include = [
-    { path = "src/volnorm/data/spy_sample.csv" },
+    { path = "src/volscale/data/spy_sample.csv" },
 ]
 
 [tool.poetry.dependencies]
@@ -29,7 +29,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-volnorm = "volnorm.cli:main"
+volscale = "volscale.cli:main"
 
 [tool.mypy]
 ignore_missing_imports = true

@@ -8,7 +8,7 @@ from tests.benchmark_loader import (
     load_realized_volatility_benchmark,
 )
 
-from volnorm.experimental.volatility import (
+from volscale.experimental.volatility import (
     compute_garch_forecast,
     compute_implied_volatility,
     compute_realized_volatility,

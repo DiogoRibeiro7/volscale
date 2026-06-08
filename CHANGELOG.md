@@ -9,7 +9,7 @@ The format is intentionally simple and keeps changes grouped by release.
 ### Added
 
 - Stable core package structure for volatility-scaled feature engineering.
-- Dedicated `volnorm.experimental` package for exploratory models and helpers.
+- Dedicated `volscale.experimental` package for exploratory models and helpers.
 - Typed `FeatureConfig` for feature-pipeline configuration.
 - Release workflow with wheel/sdist build verification.
 - File-backed numerical benchmark fixtures for ATR, implied volatility, and realized volatility.
@@ -23,7 +23,7 @@ The format is intentionally simple and keeps changes grouped by release.
 
 ### Deprecated
 
-- Legacy wrapper imports through `volnorm.events`, `volnorm.smoothing`, and `volnorm.synthetic`.
+- Legacy wrapper imports through `volscale.events`, `volscale.smoothing`, and `volscale.synthetic`.
 
 ## Unreleased
 

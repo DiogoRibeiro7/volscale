@@ -6,7 +6,7 @@ __all__ = ["low_pass_filter"]
 
 
 def low_pass_filter(*args, **kwargs):
-    """Compatibility wrapper for ``volnorm.experimental.preprocessing.low_pass_filter``."""
+    """Compatibility wrapper for ``volscale.experimental.preprocessing.low_pass_filter``."""
     warn_legacy_wrapper()
     from .experimental.preprocessing import low_pass_filter as _low_pass_filter
 

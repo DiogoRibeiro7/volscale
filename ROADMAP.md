@@ -59,7 +59,7 @@ This repository is focused on a small Python package for exploratory volatility 
 
 ## Name
 
-The repository name is `volnorm`.
+The repository name is `volscale`.
 
 ---
 

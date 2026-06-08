@@ -4,7 +4,7 @@ import warnings
 
 
 WARNING_MESSAGE = (
-    "volnorm.experimental contains exploratory helpers with weaker statistical "
+    "volscale.experimental contains exploratory helpers with weaker statistical "
     "or numerical guarantees than the stable core API."
 )
 

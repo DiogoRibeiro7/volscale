@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pytest
-from volnorm.rolling import (
+from volscale.rolling import (
     compute_rolling_std,
     compute_sma,
     compute_atr_proxy,

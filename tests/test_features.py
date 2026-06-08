@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from volnorm.features import (
+from volscale.features import (
     DEFAULT_FEATURES,
     SUPPORTED_FEATURES,
     FeatureConfig,

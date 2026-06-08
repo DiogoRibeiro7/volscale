@@ -4,8 +4,8 @@
 
 The repository separates stable utilities from exploratory helpers.
 
-- Stable APIs live in the top-level `volnorm` package.
-- Experimental APIs live under `volnorm.experimental`.
+- Stable APIs live in the top-level `volscale` package.
+- Experimental APIs live under `volscale.experimental`.
 - Compatibility wrappers exist for some older import paths, but new work should target the explicit stable or experimental boundary directly.
 
 ## Development Setup

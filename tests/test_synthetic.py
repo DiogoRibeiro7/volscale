@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
-from volnorm._warnings import LEGACY_WRAPPER_WARNING
-from volnorm.synthetic import generate_synthetic_prices
+from volscale._warnings import LEGACY_WRAPPER_WARNING
+from volscale.synthetic import generate_synthetic_prices
 
 
 def test_synthetic_length_and_seed():

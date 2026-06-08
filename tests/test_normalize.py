@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pytest
-from volnorm.normalize import normalize_feature, compute_cross_sectional_zscore
+from volscale.normalize import normalize_feature, compute_cross_sectional_zscore
 
 
 def test_normalize_feature():

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
-from volnorm._warnings import LEGACY_WRAPPER_WARNING
-from volnorm.events import flag_event_window
+from volscale._warnings import LEGACY_WRAPPER_WARNING
+from volscale.events import flag_event_window
 
 
 def test_flag_event_window():

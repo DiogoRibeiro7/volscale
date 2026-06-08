@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from volnorm.cli import main
+from volscale.cli import main
 
 
 def test_cli_basic(tmp_path, capsys):

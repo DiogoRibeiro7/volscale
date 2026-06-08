@@ -6,7 +6,7 @@ __all__ = ["flag_event_window"]
 
 
 def flag_event_window(*args, **kwargs):
-    """Compatibility wrapper for ``volnorm.experimental.events.flag_event_window``."""
+    """Compatibility wrapper for ``volscale.experimental.events.flag_event_window``."""
     warn_legacy_wrapper()
     from .experimental.events import flag_event_window as _flag_event_window
 

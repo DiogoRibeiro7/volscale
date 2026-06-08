@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pytest
-from volnorm.core import compute_log_returns
+from volscale.core import compute_log_returns
 
 
 def test_log_returns():

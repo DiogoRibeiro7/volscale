@@ -4,9 +4,9 @@ import warnings
 
 
 LEGACY_WRAPPER_WARNING = (
-    "This module is a compatibility wrapper around volnorm.experimental and may "
+    "This module is a compatibility wrapper around volscale.experimental and may "
     "move or disappear in a future release. Prefer importing from "
-    "volnorm.experimental directly."
+    "volscale.experimental directly."
 )
 
 

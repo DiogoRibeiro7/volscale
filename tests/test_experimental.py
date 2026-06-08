@@ -2,8 +2,8 @@ import warnings
 
 import pandas as pd
 
-from volnorm import experimental
-from volnorm.experimental._warning import WARNING_MESSAGE
+from volscale import experimental
+from volscale.experimental._warning import WARNING_MESSAGE
 
 
 def test_experimental_helpers_emit_warning():

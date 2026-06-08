@@ -1,6 +1,6 @@
-# VolNorm
+# VolScale
 
-VolNorm provides a compact set of utilities for exploratory volatility-scaled feature engineering in financial time series. The library focuses on rolling statistics, normalization helpers, and a small command line interface for generating features from CSV data.
+VolScale provides a compact set of utilities for exploratory volatility-scaled feature engineering in financial time series. The library focuses on rolling statistics, normalization helpers, and a small command line interface for generating features from CSV data.
 
 ## Installation
 
@@ -24,13 +24,13 @@ pytest -q
 Generate normalized features from a CSV file with the CLI:
 
 ```bash
-poetry run volnorm prices.csv --column close --window 20 --output features.csv
+poetry run volscale prices.csv --column close --window 20 --output features.csv
 ```
 
 For indexed output, row filtering, and JSON export:
 
 ```bash
-poetry run volnorm prices.csv \
+poetry run volscale prices.csv \
   --column close \
   --window 20 \
   --date-column date \
@@ -45,7 +45,7 @@ Use the library directly in Python:
 
 ```python
 import pandas as pd
-from volnorm import FeatureConfig, build_normalized_features
+from volscale import FeatureConfig, build_normalized_features
 
 prices = pd.Series([100, 101, 102, 103, 104])
 config = FeatureConfig(
@@ -69,7 +69,7 @@ print(features.dropna())
 - Bollinger, Keltner and Donchian channel helpers
 - Cross-sectional normalization across multiple assets
 
-Experimental helpers live under the `volnorm.experimental` package:
+Experimental helpers live under the `volscale.experimental` package:
 
 - Realized volatility from intraday data
 - Simple fixed-parameter GARCH-style forecasts
@@ -80,17 +80,17 @@ Experimental helpers live under the `volnorm.experimental` package:
 These experimental helpers emit a runtime warning and should be treated as
 exploratory utilities rather than stable modeling components.
 
-Legacy imports such as `volnorm.events`, `volnorm.smoothing`, and
-`volnorm.synthetic` are compatibility wrappers only and emit deprecation
-warnings. Prefer the corresponding `volnorm.experimental.*` modules directly.
+Legacy imports such as `volscale.events`, `volscale.smoothing`, and
+`volscale.synthetic` are compatibility wrappers only and emit deprecation
+warnings. Prefer the corresponding `volscale.experimental.*` modules directly.
 
-See [`notebooks/volnorm_example.ipynb`](notebooks/volnorm_example.ipynb) for a simple walkthrough.
+See [`notebooks/volscale_example.ipynb`](notebooks/volscale_example.ipynb) for a simple walkthrough.
 
 ## Project layout
 
 ```text
 src/
-└── volnorm/
+└── volscale/
     ├── core.py           # log returns and basic transforms
     ├── rolling.py        # moving averages and volatility metrics
     ├── volatility.py     # stable ATR, MAD and channel indicators
@@ -103,7 +103,7 @@ src/
 The package also includes a small SPY price snippet for demos:
 
 ```python
-from volnorm import load_spy_sample
+from volscale import load_spy_sample
 spy = load_spy_sample()
 ```
 

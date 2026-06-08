@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 from tests.benchmark_loader import load_atr_benchmark
-from volnorm.volatility import (
+from volscale.volatility import (
     compute_true_range,
     compute_atr,
     compute_mad,
