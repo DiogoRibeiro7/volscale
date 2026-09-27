@@ -1,6 +1,8 @@
 import pandas as pd
 import pytest
-from volscale.cli import main
+from dataexcept import DataLoadingError, FileWriteError
+
+from volscale.cli import _load_input_frame, _parse_args, _write_output, main
 
 
 def test_cli_basic(tmp_path, capsys):
@@ -142,6 +144,36 @@ def test_cli_rejects_empty_input_file(tmp_path):
 
     with pytest.raises(SystemExit, match="is empty"):
         main([str(csv), "--window", "2"])
+
+
+def test_cli_wraps_missing_input(tmp_path):
+    missing = tmp_path / "missing.csv"
+
+    with pytest.raises(DataLoadingError) as caught:
+        _load_input_frame(_parse_args([str(missing)]))
+
+    assert caught.value.source == str(missing)
+    assert isinstance(caught.value.__cause__, FileNotFoundError)
+
+    with pytest.raises(SystemExit, match="DataLoadingError.*missing.csv"):
+        main([str(missing)])
+
+
+def test_cli_wraps_output_write_error(tmp_path):
+    output = tmp_path / "directory"
+    output.mkdir()
+    input_csv = tmp_path / "prices.csv"
+    pd.DataFrame({"close": [100, 101, 102]}).to_csv(input_csv, index=False)
+    argv = [str(input_csv), "--window", "2", "--output", str(output)]
+
+    with pytest.raises(FileWriteError) as caught:
+        _write_output(_parse_args(argv), "features")
+
+    assert caught.value.path == str(output)
+    assert isinstance(caught.value.__cause__, IsADirectoryError)
+
+    with pytest.raises(SystemExit, match="Failed to write file"):
+        main(argv)
 
 
 def test_cli_rejects_invalid_dates(tmp_path):
