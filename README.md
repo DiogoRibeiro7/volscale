@@ -10,6 +10,12 @@ Install the project with [Poetry](https://python-poetry.org/):
 poetry install
 ```
 
+VolScale requires Python 3.10 or newer (up to 3.14) and uses
+[DataExcept](https://github.com/DiogoRibeiro7/DataExcept) to report failures
+while reading the bundled sample or CSV input and writing CLI output. The
+command line reports these failures without a traceback; callers of
+`volscale.datasets.load_spy_sample` can catch `DataLoadingError` directly.
+
 For local verification without Poetry-managed commands, the repository CI runs:
 
 ```bash

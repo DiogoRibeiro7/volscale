@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from dataexcept import DataLoadingError, FileWriteError
+
 from .features import FeatureConfig, build_normalized_features
 
 
@@ -72,12 +74,12 @@ def _parse_args(args=None) -> argparse.Namespace:
 def _load_input_frame(args: argparse.Namespace) -> pd.DataFrame:
     try:
         df = pd.read_csv(args.input_csv, sep=args.input_sep)
-    except FileNotFoundError as exc:
-        raise SystemExit(str(exc)) from exc
+    except OSError as exc:
+        raise DataLoadingError(args.input_csv, exc) from exc
     except pd.errors.EmptyDataError as exc:
-        raise SystemExit(f"Input file '{args.input_csv}' is empty") from exc
+        raise DataLoadingError(args.input_csv, exc) from exc
     except pd.errors.ParserError as exc:
-        raise SystemExit(f"Failed to parse '{args.input_csv}': {exc}") from exc
+        raise DataLoadingError(args.input_csv, exc) from exc
 
     if df.empty:
         raise SystemExit(f"Input file '{args.input_csv}' contains no rows")
@@ -140,18 +142,28 @@ def _render_output(args: argparse.Namespace, features: pd.DataFrame) -> str:
 def _write_output(args: argparse.Namespace, rendered: str) -> None:
     if args.output:
         output_path = Path(args.output)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(rendered, encoding="utf-8")
+        try:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered, encoding="utf-8")
+        except OSError as exc:
+            raise FileWriteError(str(output_path), exc) from exc
     else:
         print(rendered)
 
 
 def main(argv=None) -> None:
     args = _parse_args(argv)
-    df = _load_input_frame(args)
-    features = _build_feature_frame(args, df)
-    rendered = _render_output(args, features)
-    _write_output(args, rendered)
+    try:
+        df = _load_input_frame(args)
+        features = _build_feature_frame(args, df)
+        rendered = _render_output(args, features)
+        _write_output(args, rendered)
+    except DataLoadingError as exc:
+        if isinstance(exc.original, pd.errors.EmptyDataError):
+            raise SystemExit(f"Input file '{args.input_csv}' is empty") from exc
+        raise SystemExit(str(exc)) from exc
+    except FileWriteError as exc:
+        raise SystemExit(str(exc)) from exc
 
 
 if __name__ == "__main__":
